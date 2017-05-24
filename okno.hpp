@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-extern const int cport_nr;        /* /dev/ttyUSB0  */
+extern int cport_nr;        /* /dev/ttyUSB0  */
 
 class Okno
 {

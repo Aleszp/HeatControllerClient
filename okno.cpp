@@ -3,7 +3,6 @@
 
 void clicked(GtkWidget *widget,gpointer *data)
 {
-	const int cport_nr=16;        /* /dev/ttyUSB0  */
 	int temp=200;
 	unsigned char buff[3];
 	buff[0]=0xDD;

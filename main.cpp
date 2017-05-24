@@ -2,7 +2,7 @@
 #include "okno.hpp"
 #include "rs232.h"
 
-const int cport_nr=16;        /* /dev/ttyUSB0  */
+int cport_nr=17;        // 16 - /dev/ttyUSB0 17 - /dev/ttyUSB1  
 
 void* thread_func(void *args)
 {
@@ -25,7 +25,7 @@ void* thread_func(void *args)
 			if(n > 0)
 			{
 				buf[n] = 0;   //always put a "null" at the end of a string! 
-				printf("received %i bytes: %u\n", n, ((buf[1])<<8)|buf[2]);
+				printf("received %i bytes: %s\n", n, buf);
 			}
 
 		}
