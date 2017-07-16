@@ -1,4 +1,3 @@
 Program dzięki któremu użytkownik będzie mógł w wygodny sposób sterować układem do obróbki cieplnej metali.
 
-Do prawidłowej kompilacji wymagana jest biblioteka RS-232 (http://www.teuniz.net/RS-232/) autorstwa Teunisa van Beelena(teuniz@gmail.com) na licencji GPLv3.
-Ponadto niezbędna jest biblioteka GTK2+.
+Do prawidłowego działania wymagane są biblioteki Qt5.
