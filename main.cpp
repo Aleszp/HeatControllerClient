@@ -50,7 +50,6 @@ int main(int argc, char *argv[])
 	CustomDialog dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
-		// take proper action here
 		rs.setPortName(dialog.comboBox()->currentText());
 	}
 	
@@ -59,23 +58,12 @@ int main(int argc, char *argv[])
     w.resize(800,600);
     w.show();
 
-    /*QComboBox box(&w);
-    Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
-    {
-        box.addItem(port.portName());
-    }
-    box.move(10,10);*/
-    
-    
-    //rs.setPortName(box.currentText());
     rs.open (QIODevice::ReadWrite);
 	rs.setBaudRate (QSerialPort::Baud57600);
 	rs.setDataBits (QSerialPort::Data8);
 	rs.setStopBits (QSerialPort::OneStop);
 	rs.setParity (QSerialPort::NoParity);
 	rs.setFlowControl (QSerialPort::NoFlowControl);
-    
-    //box.show();
     
     cout<<rs.error()<<endl;
     
