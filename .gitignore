@@ -31,9 +31,6 @@
 *.out
 *.app
 
-#zewnętrzna biblioteka RS232
-rs232.h
-rs232.c
 
 #plik wykonywalny
 klient
