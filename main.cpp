@@ -1,68 +1,84 @@
-#include <gtk/gtk.h>
-#include "okno.hpp"
-#include "rs232.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
+#include <QtSerialPort/QtSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QDialog>
+#include <QtCore/QStringList>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QPushButton>
+#include <iostream>
 
-int cport_nr=17;        // 16 - /dev/ttyUSB0 17 - /dev/ttyUSB1  
+using namespace std;
 
-void* thread_func(void *args)
+class CustomDialog : public QDialog
 {
-	int n;
-    while( TRUE )
+	public:
+    CustomDialog(const QStringList& items)
     {
-		g_thread_yield ();
-        #ifdef _WIN32
-		Sleep(100);
-		#else
-		usleep(100000);  // sleep for 100 milliSeconds 
-		#endif
+        setLayout(new QHBoxLayout());
 
-        gdk_threads_enter();
-        unsigned char buf[4096];
-		for(int j=0; j < 3; j++)
-		{
-			n = RS232_PollComport(cport_nr, buf, 4095);
-
-			if(n > 0)
-			{
-				buf[n] = 0;   //always put a "null" at the end of a string! 
-				printf("received %i bytes: %s\n", n, buf);
-			}
-
-		}
-        gdk_threads_leave();
+        box = new QComboBox;
+        box->addItems(items);
+        layout()->addWidget(box);
+		setWindowTitle("Wybierz port");
+		resize(300,50);
+        QPushButton* ok = new QPushButton("ok");
+        layout()->addWidget(ok);
+        connect(ok, &QPushButton::clicked, this, [this]()
+        {
+           accept();
+        });
     }
 
-    return NULL;
-}
+    QComboBox* comboBox() { return box; }
 
-int main (int argc, char *argv[]) 
+	private:
+    QComboBox* box;
+};
+
+int main(int argc, char *argv[])
 {
-    int bdrate=57600;
-    char mode[]={'8','N','1',0};
-	
-    if(RS232_OpenComport(cport_nr, bdrate, mode))
+	QApplication a(argc, argv);
+	QSerialPort rs;
+	QStringList itemList;
+	Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
+    {
+        itemList<<port.portName();
+        qDebug() << port.portName() << port.vendorIdentifier() << port.productIdentifier() << port.hasProductIdentifier() << port.hasVendorIdentifier() << port.isBusy();
+    }
+	CustomDialog dialog(itemList);
+	if (dialog.exec() == QDialog::Accepted)
 	{
-		printf("Can not open comport\n");
-		return 1;
+		// take proper action here
+		rs.setPortName(dialog.comboBox()->currentText());
 	}
 	
-	gtk_init (&argc, &argv);
-	
-	GThread   *thread;
-	GError    *error = NULL;
-	void* data;
-    thread = g_thread_create(thread_func,&data,FALSE,&error);
-    if( ! thread )
-    {
-        g_print( "Error: %s\n", error->message );
-        return( -1 );
-    }
-	
-	Okno okno;
     
-    gtk_main ();
-    
-    
+    QWidget w;
+    w.resize(800,600);
+    w.show();
 
-    return 0;
+    /*QComboBox box(&w);
+    Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
+    {
+        box.addItem(port.portName());
+    }
+    box.move(10,10);*/
+    
+    
+    //rs.setPortName(box.currentText());
+    rs.open (QIODevice::ReadWrite);
+	rs.setBaudRate (QSerialPort::Baud57600);
+	rs.setDataBits (QSerialPort::Data8);
+	rs.setStopBits (QSerialPort::OneStop);
+	rs.setParity (QSerialPort::NoParity);
+	rs.setFlowControl (QSerialPort::NoFlowControl);
+    
+    //box.show();
+    
+    cout<<rs.error()<<endl;
+    
+    rs.close();
+    return a.exec();
 }

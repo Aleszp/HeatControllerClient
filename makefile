@@ -1,14 +1,10 @@
 CXX=g++
-CXXFLAGS=-O3 -Wall -pedantic -std=c++11 -Wno-deprecated `pkg-config gtk+-2.0 --cflags`
-LIBS=`pkg-config gtk+-2.0 --libs`
-klient:	main.o okno.o rs232.o
-		$(CXX) -o klient main.o okno.o rs232.o $(LIBS) $(CXXFLAGS)
+CXXFLAGS=-O3 -Wall -pedantic -std=c++11 -I/usr/include/x86_64-linux-gnu/qt5 -fPIC 
+LIBS= -lQt5Core -lQt5Gui -lQt5Widgets -lqwt-qt5 -lQt5SerialPort
+klient:	main.o
+		$(CXX) -o klient main.o $(LIBS) $(CXXFLAGS)
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS)
-okno.o:	okno.cpp
-		$(CXX) -o okno.o -c okno.cpp $(CXXFLAGS)
-rs232.o:	rs232.c
-		gcc -o rs232.o -c rs232.c -O3 -Wall -pedantic -std=gnu99 -Wno-deprecated
 clean:
 		rm -f *.o
 
