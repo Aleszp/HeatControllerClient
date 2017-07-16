@@ -32,7 +32,7 @@ void MainWindow::setupRS(void)
     }
     if(itemList.isEmpty())
     {
-		if (QMessageBox::Ok == QMessageBox(QMessageBox::Information, "Brak portu szeregowego!", "Nie wykryto portu szeregowego!", QMessageBox::Ok).exec()) 
+		if (QMessageBox::Ok == QMessageBox(QMessageBox::Critical, "Brak portu szeregowego!", "Nie wykryto portu szeregowego! \nKoniec programu.", QMessageBox::Ok).exec()) 
 		{
 			exit(1);
 		}

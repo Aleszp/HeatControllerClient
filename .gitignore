@@ -31,6 +31,8 @@
 *.out
 *.app
 
+#pliki moc wykorzystywane przy kompilacji QT
+*.moc
 
 #plik wykonywalny
 klient
