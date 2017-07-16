@@ -1,4 +1,7 @@
 #include <QtSerialPort/QSerialPortInfo>
+#include <QtWidgets/QMessageBox>
+
+#include <cstdlib>
 #include <iostream>
 
 #include "MainWindow.hpp"
@@ -27,6 +30,13 @@ void MainWindow::setupRS(void)
         itemList<<port.portName();
         //qDebug() << port.portName() << port.vendorIdentifier() << port.productIdentifier() << port.hasProductIdentifier() << port.hasVendorIdentifier() << port.isBusy();
     }
+    if(itemList.isEmpty())
+    {
+		if (QMessageBox::Ok == QMessageBox(QMessageBox::Information, "Brak portu szeregowego!", "Nie wykryto portu szeregowego!", QMessageBox::Ok).exec()) 
+		{
+			exit(1);
+		}
+	}
 	CustomDialog dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
