@@ -1,8 +1,10 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtWidgets/QMessageBox>
+#include <QtCore/QDebug> 
 
 #include <cstdlib>
 #include <iostream>
+#include <cstdlib>
 
 #include "MainWindow.hpp"
 #include "CustomDialog.hpp"
@@ -25,18 +27,30 @@ void MainWindow::setupRS(void)
 {
 	rs_=new QSerialPort(this);
 	QStringList itemList;
-	Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
-    {
-        itemList<<port.portName();
-        //qDebug() << port.portName() << port.vendorIdentifier() << port.productIdentifier() << port.hasProductIdentifier() << port.hasVendorIdentifier() << port.isBusy();
-    }
-    if(itemList.isEmpty())
-    {
-		if (QMessageBox::Ok == QMessageBox(QMessageBox::Critical, "Brak portu szeregowego!", "Nie wykryto portu szeregowego! \nKoniec programu.", QMessageBox::Ok).exec()) 
+	
+	do
+	{
+		itemList.clear();
+		Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
 		{
-			exit(1);
+			itemList<<port.portName();
+			qDebug() << port.portName() << port.vendorIdentifier() << port.productIdentifier() << port.hasProductIdentifier() << port.hasVendorIdentifier() << port.isBusy();
+		}
+		if(itemList.isEmpty())
+		{
+			int wybor;
+			
+			QMessageBox pytanie(QMessageBox::Question, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Abort|QMessageBox::Retry);
+			wybor=pytanie.exec();
+			
+			if (wybor==QMessageBox::Abort) 
+			{
+				QMessageBox(QMessageBox::Critical, "Brak portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
+				exit(1);
+			}
 		}
 	}
+	while(itemList.isEmpty());
 	CustomDialog dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
