@@ -1,5 +1,6 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QWidget>
 #include <QtCore/QDebug> 
 
 #include <cstdlib>
@@ -11,21 +12,33 @@
 
 MainWindow::MainWindow(QWidget* parent):QMainWindow(parent)
 {
-    setupRS();
+	setupRS();
+	
+	setupOkno();
+    setupTemperatura();
+    setupPrzycisk();
     
-    w_.resize(800,600);
-    w_.show();
+    okno_->show();
 }
     
 MainWindow::~MainWindow()
 {
-    rs_->close();
-    delete rs_;
+    rs232_->close();
+    delete rs232_;
+    delete zadanaTemperatura_;
+    delete wyslij_;
+    delete okno_;
+}
+
+void MainWindow::setupOkno(void)
+{
+	okno_=new QWidget();
+	okno_->resize(800,600);
 }
 
 void MainWindow::setupRS(void)
 {
-	rs_=new QSerialPort(this);
+	rs232_=new QSerialPort(this);
 	QStringList itemList;
 	
 	do
@@ -54,16 +67,29 @@ void MainWindow::setupRS(void)
 	CustomDialog dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
-		rs_->setPortName(dialog.comboBox()->currentText());
+		rs232_->setPortName(dialog.comboBox()->currentText());
 	}
 	
-	rs_->open (QIODevice::ReadWrite);
-	rs_->setBaudRate (QSerialPort::Baud57600);
-	rs_->setDataBits (QSerialPort::Data8);
-	rs_->setStopBits (QSerialPort::OneStop);
-	rs_->setParity (QSerialPort::NoParity);
-	rs_->setFlowControl (QSerialPort::NoFlowControl);
-    std::cerr<<rs_->error()<<std::endl;
+	rs232_->open (QIODevice::ReadWrite);
+	rs232_->setBaudRate (QSerialPort::Baud57600);
+	rs232_->setDataBits (QSerialPort::Data8);
+	rs232_->setStopBits (QSerialPort::OneStop);
+	rs232_->setParity (QSerialPort::NoParity);
+	rs232_->setFlowControl (QSerialPort::NoFlowControl);
+    std::cerr<<rs232_->error()<<std::endl;
+}
+
+void MainWindow::setupTemperatura(void)
+{
+	zadanaTemperatura_=new QSpinBox(okno_);
+    zadanaTemperatura_->setRange(0, 999);
+    zadanaTemperatura_->setSingleStep(1);
+    zadanaTemperatura_->setSuffix(" ℃");   
+}
+
+void MainWindow::setupPrzycisk(void)
+{
+	wyslij_=new QPushButton("Ustaw",okno_);
 }
 
 #include "MainWindow.moc"

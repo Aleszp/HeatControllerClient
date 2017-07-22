@@ -3,6 +3,7 @@
 
 #include <QtCore/QtGlobal>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QSpinBox>
 #include <QtSerialPort/QSerialPort>
 
 namespace Ui 
@@ -20,11 +21,16 @@ class MainWindow : public QMainWindow
 
 	private:
 		void setupRS(void);
+		void setupOkno(void);
+		void setupTemperatura(void);
+		void setupPrzycisk(void);
 
 	private:
 		Ui::MainWindow *ui;
-		QSerialPort *rs_;
-		QWidget w_;
+		QSerialPort *rs232_;
+		QWidget* okno_;
+		QSpinBox* zadanaTemperatura_;
+		QPushButton* wyslij_;
 };
 
 #endif
