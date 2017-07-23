@@ -26,7 +26,7 @@ class WyborPortu:public QDialog
         });
     }
 
-    QComboBox* comboBox() { return box; }
+    inline QComboBox* poleKombi() {return box;}
 
 	private:
     QComboBox* box;

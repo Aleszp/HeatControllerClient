@@ -70,7 +70,7 @@ void GlowneOkno::setupRS(void)
 	WyborPortu dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
-		rs232_->setPortName(dialog.comboBox()->currentText());
+		rs232_->setPortName(dialog.poleKombi()->currentText());
 	}
 	
 	rs232_->open (QIODevice::ReadWrite);
