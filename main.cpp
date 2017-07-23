@@ -2,7 +2,7 @@
 #include "okno.hpp"
 #include "rs232.h"
 
-int cport_nr=17;        // 16 - /dev/ttyUSB0 17 - /dev/ttyUSB1  
+int cport_nr=16;        // 16 - /dev/ttyUSB0 17 - /dev/ttyUSB1  
 
 void* thread_func(void *args)
 {

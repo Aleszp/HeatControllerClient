@@ -4,11 +4,12 @@
 void clicked(GtkWidget *widget,gpointer *data)
 {
 	int temp=200;
-	unsigned char buff[3];
-	buff[0]=0xDD;
-	buff[1]=temp>>8;
-	buff[2]=temp&0xFF;
-    RS232_SendBuf(cport_nr, buff,3);
+	unsigned char buff[2];
+	buff[0]=0xcc;
+	//buff[1]=temp>>8;
+	//buff[2]=temp&0xFF;
+	buff[3]=0xCC;
+    RS232_SendBuf(cport_nr, buff,2);
     
     /*int n;
 	unsigned char buf[4096];
