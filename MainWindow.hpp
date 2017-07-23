@@ -2,9 +2,11 @@
 #define MAINWINDOW_HPP_
 
 #include <QtCore/QtGlobal>
+#include <QtSerialPort/QSerialPort>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
-#include <QtSerialPort/QSerialPort>
+#include <QtWidgets/QPushButton>
+
 
 namespace Ui 
 {
@@ -24,6 +26,7 @@ class MainWindow : public QMainWindow
 		void setupOkno(void);
 		void setupTemperatura(void);
 		void setupPrzycisk(void);
+		void setupWykres(void);
 
 	private:
 		Ui::MainWindow *ui;

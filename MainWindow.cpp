@@ -2,6 +2,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 #include <QtCore/QDebug> 
+#include <qwt/qwt_plot.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent)
 	setupOkno();
     setupTemperatura();
     setupPrzycisk();
+    setupWykres();
     
     okno_->show();
 }
@@ -34,6 +36,7 @@ void MainWindow::setupOkno(void)
 {
 	okno_=new QWidget();
 	okno_->resize(800,600);
+	okno_->setWindowTitle("Kontroler temperatury");
 }
 
 void MainWindow::setupRS(void)
@@ -90,6 +93,18 @@ void MainWindow::setupTemperatura(void)
 void MainWindow::setupPrzycisk(void)
 {
 	wyslij_=new QPushButton("Ustaw",okno_);
+}
+
+void MainWindow::setupWykres(void)
+{
+	QwtPlot wykres (okno_);
+	wykres.setTitle ("Temperatura");
+	wykres.setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykres.setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
+	wykres.setFixedSize (700, 500);
+	wykres.setCanvasBackground(QBrush (QColor (0xff,0xfa, 0x6b)));
+	wykres.setAxisScale (QwtPlot::xBottom, 0, 100);
+	wykres.setAxisScale (QwtPlot::yLeft, 0, 800);
 }
 
 #include "MainWindow.moc"
