@@ -6,10 +6,10 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QPushButton>
 
-class CustomDialog : public QDialog
+class WyborPortu:public QDialog
 {
 	public:
-    CustomDialog(const QStringList& items)
+    WyborPortu(const QStringList& items)
     {
         setLayout(new QHBoxLayout());
 

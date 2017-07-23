@@ -1,14 +1,14 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 
-#include "MainWindow.hpp"
+#include "GlowneOkno.hpp"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	MainWindow w;
+	GlowneOkno w;
     
     return a.exec();
 }

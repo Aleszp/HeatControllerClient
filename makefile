@@ -8,17 +8,17 @@ QTFLAGS= -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5
 LIBS= -lQt5Core -lQt5Gui -lQt5Widgets -lqwt-qt5 -lQt5SerialPort
 
 #Konsolidacja programu
-klient:	main.o MainWindow.o
-		$(CXX) -o klient main.o MainWindow.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
+klient:	main.o GlowneOkno.o
+		$(CXX) -o klient main.o GlowneOkno.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja wykonywalnej części pprogramu
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji głównej klasy programu
-MainWindow.o:	MainWindow.cpp MainWindow.moc MainWindow.hpp CustomDialog.hpp
-		$(CXX) -o MainWindow.o -c MainWindow.cpp $(CXXFLAGS) $(QTFLAGS)
+GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp WyborPortu.hpp
+		$(CXX) -o GlowneOkno.o -c GlowneOkno.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla głównej klasy programu (wymóg prawidłowego działania biblioteki Qt)
-MainWindow.moc:	MainWindow.hpp
-		moc MainWindow.hpp > MainWindow.moc
+GlowneOkno.moc:	GlowneOkno.hpp
+		moc GlowneOkno.hpp > GlowneOkno.moc
 		
 #Usunięcie efektów kompilacji		
 clean:

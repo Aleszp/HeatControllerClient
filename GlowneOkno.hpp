@@ -10,16 +10,16 @@
 
 namespace Ui 
 {
-	class MainWindow;
+	class GlowneOkno;
 }
 
-class MainWindow : public QMainWindow
+class GlowneOkno : public QMainWindow
 {
     Q_OBJECT
 
 	public:
-		explicit MainWindow(QWidget* parent = nullptr);
-		~MainWindow();
+		explicit GlowneOkno(QWidget* parent = nullptr);
+		~GlowneOkno();
 
 	private:
 		void setupRS(void);
@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
 		void setupWykres(void);
 
 	private:
-		Ui::MainWindow *ui;
+		Ui::GlowneOkno *ui;
 		QSerialPort *rs232_;
 		QWidget* okno_;
 		QSpinBox* zadanaTemperatura_;

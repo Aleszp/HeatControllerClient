@@ -8,10 +8,10 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "MainWindow.hpp"
-#include "CustomDialog.hpp"
+#include "GlowneOkno.hpp"
+#include "WyborPortu.hpp"
 
-MainWindow::MainWindow(QWidget* parent):QMainWindow(parent)
+GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
 	setupRS();
 	
@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget* parent):QMainWindow(parent)
     okno_->show();
 }
     
-MainWindow::~MainWindow()
+GlowneOkno::~GlowneOkno()
 {
     rs232_->close();
     delete rs232_;
@@ -32,14 +32,14 @@ MainWindow::~MainWindow()
     delete okno_;
 }
 
-void MainWindow::setupOkno(void)
+void GlowneOkno::setupOkno(void)
 {
 	okno_=new QWidget();
 	okno_->resize(800,600);
 	okno_->setWindowTitle("Kontroler temperatury");
 }
 
-void MainWindow::setupRS(void)
+void GlowneOkno::setupRS(void)
 {
 	rs232_=new QSerialPort(this);
 	QStringList itemList;
@@ -67,7 +67,7 @@ void MainWindow::setupRS(void)
 		}
 	}
 	while(itemList.isEmpty());
-	CustomDialog dialog(itemList);
+	WyborPortu dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
 		rs232_->setPortName(dialog.comboBox()->currentText());
@@ -82,7 +82,7 @@ void MainWindow::setupRS(void)
     std::cerr<<rs232_->error()<<std::endl;
 }
 
-void MainWindow::setupTemperatura(void)
+void GlowneOkno::setupTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox(okno_);
     zadanaTemperatura_->setRange(0, 999);
@@ -90,12 +90,12 @@ void MainWindow::setupTemperatura(void)
     zadanaTemperatura_->setSuffix(" ℃");   
 }
 
-void MainWindow::setupPrzycisk(void)
+void GlowneOkno::setupPrzycisk(void)
 {
 	wyslij_=new QPushButton("Ustaw",okno_);
 }
 
-void MainWindow::setupWykres(void)
+void GlowneOkno::setupWykres(void)
 {
 	QwtPlot wykres (okno_);
 	wykres.setTitle ("Temperatura");
@@ -107,4 +107,4 @@ void MainWindow::setupWykres(void)
 	wykres.setAxisScale (QwtPlot::yLeft, 0, 800);
 }
 
-#include "MainWindow.moc"
+#include "GlowneOkno.moc"
