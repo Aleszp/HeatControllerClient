@@ -1,3 +1,3 @@
 Program dzięki któremu użytkownik będzie mógł w wygodny sposób sterować układem do obróbki cieplnej metali.
 
-Do prawidłowego działania wymagane są biblioteki Qt5.
+Do prawidłowego działania wymagane są biblioteki Qt5 i qwt.
