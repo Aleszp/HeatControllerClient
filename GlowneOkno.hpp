@@ -6,6 +6,8 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QBoxLayout>
+
 #include <qwt/qwt_plot.h>
 
 namespace Ui 
@@ -25,8 +27,10 @@ class GlowneOkno : public QMainWindow
 		void setupRS(void);
 		void setupOkno(void);
 		void setupTemperatura(void);
-		void setupPrzycisk(void);
+		void setupWyslij(void);
+		void setupZatrzymajGrzanie(void);
 		void setupWykres(void);
+		void setupRozklad(void);
 
 	private:
 		Ui::GlowneOkno *ui;
@@ -34,7 +38,9 @@ class GlowneOkno : public QMainWindow
 		QWidget* okno_;
 		QSpinBox* zadanaTemperatura_;
 		QPushButton* wyslij_;
+		QPushButton* zatrzymajGrzanie_;
 		QwtPlot* wykres_;
+		QVBoxLayout* glownyRozmieszczacz_;
 };
 
 #endif

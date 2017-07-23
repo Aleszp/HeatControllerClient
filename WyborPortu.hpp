@@ -3,7 +3,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDialog>
 #include <QtCore/QStringList>
-#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QPushButton>
 
 class WyborPortu:public QDialog
@@ -11,23 +11,36 @@ class WyborPortu:public QDialog
 	public:
     WyborPortu(const QStringList& items)
     {
-        setLayout(new QHBoxLayout());
-
-        box = new QComboBox;
-        box->addItems(items);
-        layout()->addWidget(box);
 		setWindowTitle("Wybierz port");
 		resize(300,50);
-        QPushButton* ok = new QPushButton("ok");
-        layout()->addWidget(ok);
-        connect(ok, &QPushButton::clicked, this, [this]()
+		
+		rozmieszczacz_=new QGridLayout(this);
+        setLayout(rozmieszczacz_);
+        
+        kombi_=new QComboBox;
+        kombi_->addItems(items);
+        ok_=new QPushButton("OK");
+        przerwij_=new QPushButton("Przerwij");
+        
+        rozmieszczacz_->addWidget(kombi_,0,0,1,2);
+        rozmieszczacz_->addWidget(ok_,1,0);
+        rozmieszczacz_->addWidget(przerwij_,1,1);
+        
+        connect(ok_, &QPushButton::clicked, this, [this]()
         {
            accept();
         });
+        connect(przerwij_, &QPushButton::clicked, this, [this]()
+        {
+           reject();
+        });
     }
 
-    inline QComboBox* poleKombi() {return box;}
+    inline QComboBox* poleKombi() {return kombi_;}
 
 	private:
-    QComboBox* box;
+		QComboBox* kombi_;
+		QPushButton* ok_;
+        QPushButton* przerwij_;
+        QGridLayout* rozmieszczacz_;
 };

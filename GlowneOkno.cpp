@@ -1,8 +1,7 @@
 #include <QtSerialPort/QSerialPortInfo>
+#include <QtCore/QDebug> 
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
-#include <QtCore/QDebug> 
-
 
 #include <cstdlib>
 #include <iostream>
@@ -16,8 +15,9 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 	setupRS();
 	
 	setupOkno();
+    setupRozklad();
     setupTemperatura();
-    setupPrzycisk();
+    setupWyslij();
     setupWykres();
     
     okno_->show();
@@ -40,6 +40,12 @@ void GlowneOkno::setupOkno(void)
 	okno_->setWindowTitle("Kontroler temperatury");
 }
 
+void GlowneOkno::setupRozklad(void)
+{
+	glownyRozmieszczacz_=new QVBoxLayout(okno_);
+	okno_->setLayout(glownyRozmieszczacz_);
+}
+
 void GlowneOkno::setupRS(void)
 {
 	rs232_=new QSerialPort(this);
@@ -57,7 +63,7 @@ void GlowneOkno::setupRS(void)
 		{
 			int wybor;
 			
-			QMessageBox pytanie(QMessageBox::Question, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Abort|QMessageBox::Retry);
+			QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Abort|QMessageBox::Retry);
 			wybor=pytanie.exec();
 			
 			if (wybor==QMessageBox::Abort) 
@@ -70,10 +76,19 @@ void GlowneOkno::setupRS(void)
 	while(itemList.isEmpty());
 	
 	WyborPortu dialog(itemList);
-	if (dialog.exec() == QDialog::Accepted)
+	
+	int wynik;
+	do
 	{
+		wynik=dialog.exec();
 		rs232_->setPortName(dialog.poleKombi()->currentText());
+		if(wynik==QDialog::Rejected)
+		{
+			QMessageBox(QMessageBox::Critical, "Nie wybrano portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
+			exit(2);
+		}
 	}
+	while(wynik != QDialog::Accepted);
 	
 	rs232_->open (QIODevice::ReadWrite);
 	rs232_->setBaudRate (QSerialPort::Baud57600);
@@ -86,26 +101,37 @@ void GlowneOkno::setupRS(void)
 
 void GlowneOkno::setupTemperatura(void)
 {
-	zadanaTemperatura_=new QSpinBox(okno_);
+	zadanaTemperatura_=new QSpinBox;
+	glownyRozmieszczacz_->addWidget(zadanaTemperatura_);
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
 }
 
-void GlowneOkno::setupPrzycisk(void)
+void GlowneOkno::setupWyslij(void)
 {
-	wyslij_=new QPushButton("Ustaw",okno_);
+	wyslij_=new QPushButton("Ustaw");
+	wyslij_->setFixedSize(100,20);
+	glownyRozmieszczacz_->addWidget(wyslij_);
+}
+
+void GlowneOkno::setupZatrzymajGrzanie(void)
+{
+	zatrzymajGrzanie_=new QPushButton("ZatrzymajGrzanie");
+	zatrzymajGrzanie_->setFixedSize(100,20);
+	glownyRozmieszczacz_->addWidget(zatrzymajGrzanie_);
 }
 
 void GlowneOkno::setupWykres(void)
 {
-	wykres_=new QwtPlot(okno_);
+	wykres_=new QwtPlot;
+	glownyRozmieszczacz_->addWidget(wykres_);
 	wykres_->setTitle ("Temperatura");
 	wykres_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
 	wykres_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	wykres_->setFixedSize (700, 500);
-	wykres_->setCanvasBackground(QBrush (QColor (0xff,0xfa, 0x6b)));
-	wykres_->setAxisScale (QwtPlot::xBottom, 0, 100);
+	//wykres_->setSizePolicy();
+	wykres_->setCanvasBackground(QBrush (Qt::white));
+	wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
 }
 
