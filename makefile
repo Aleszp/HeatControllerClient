@@ -14,7 +14,7 @@ klient:	main.o MainWindow.o
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji głównej klasy programu
-MainWindow.o:	MainWindow.cpp MainWindow.moc
+MainWindow.o:	MainWindow.cpp MainWindow.moc MainWindow.hpp CustomDialog.hpp
 		$(CXX) -o MainWindow.o -c MainWindow.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla głównej klasy programu (wymóg prawidłowego działania biblioteki Qt)
 MainWindow.moc:	MainWindow.hpp
