@@ -2,7 +2,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 #include <QtCore/QDebug> 
-#include <qwt/qwt_plot.h>
+
 
 #include <cstdlib>
 #include <iostream>
@@ -29,6 +29,7 @@ GlowneOkno::~GlowneOkno()
     delete rs232_;
     delete zadanaTemperatura_;
     delete wyslij_;
+    delete wykres_;
     delete okno_;
 }
 
@@ -67,6 +68,7 @@ void GlowneOkno::setupRS(void)
 		}
 	}
 	while(itemList.isEmpty());
+	
 	WyborPortu dialog(itemList);
 	if (dialog.exec() == QDialog::Accepted)
 	{
@@ -97,14 +99,14 @@ void GlowneOkno::setupPrzycisk(void)
 
 void GlowneOkno::setupWykres(void)
 {
-	QwtPlot wykres (okno_);
-	wykres.setTitle ("Temperatura");
-	wykres.setAxisTitle (QwtPlot::xBottom, "Czas /s");
-	wykres.setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	wykres.setFixedSize (700, 500);
-	wykres.setCanvasBackground(QBrush (QColor (0xff,0xfa, 0x6b)));
-	wykres.setAxisScale (QwtPlot::xBottom, 0, 100);
-	wykres.setAxisScale (QwtPlot::yLeft, 0, 800);
+	wykres_=new QwtPlot(okno_);
+	wykres_->setTitle ("Temperatura");
+	wykres_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykres_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
+	wykres_->setFixedSize (700, 500);
+	wykres_->setCanvasBackground(QBrush (QColor (0xff,0xfa, 0x6b)));
+	wykres_->setAxisScale (QwtPlot::xBottom, 0, 100);
+	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
 }
 
 #include "GlowneOkno.moc"

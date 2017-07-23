@@ -6,7 +6,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QPushButton>
-
+#include <qwt/qwt_plot.h>
 
 namespace Ui 
 {
@@ -34,6 +34,7 @@ class GlowneOkno : public QMainWindow
 		QWidget* okno_;
 		QSpinBox* zadanaTemperatura_;
 		QPushButton* wyslij_;
+		QwtPlot* wykres_;
 };
 
 #endif
