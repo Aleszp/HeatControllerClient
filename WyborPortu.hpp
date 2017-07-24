@@ -1,3 +1,6 @@
+#ifndef WYBOR_PORTU_HPP
+#define WYBOR_PORTU_HPP
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QComboBox>
@@ -9,34 +12,10 @@
 class WyborPortu:public QDialog
 {
 	public:
-    WyborPortu(const QStringList& items)
-    {
-		setWindowTitle("Wybierz port");
-		resize(300,50);
+		WyborPortu(const QStringList& items);
+		~WyborPortu();
 		
-		rozmieszczacz_=new QGridLayout(this);
-        setLayout(rozmieszczacz_);
-        
-        kombi_=new QComboBox;
-        kombi_->addItems(items);
-        ok_=new QPushButton("OK");
-        przerwij_=new QPushButton("Przerwij");
-        
-        rozmieszczacz_->addWidget(kombi_,0,0,1,2);
-        rozmieszczacz_->addWidget(ok_,1,0);
-        rozmieszczacz_->addWidget(przerwij_,1,1);
-        
-        connect(ok_, &QPushButton::clicked, this, [this]()
-        {
-           accept();
-        });
-        connect(przerwij_, &QPushButton::clicked, this, [this]()
-        {
-           reject();
-        });
-    }
-
-    inline QComboBox* poleKombi() {return kombi_;}
+		inline QComboBox* poleKombi() {return kombi_;}
 
 	private:
 		QComboBox* kombi_;
@@ -44,3 +23,5 @@ class WyborPortu:public QDialog
         QPushButton* przerwij_;
         QGridLayout* rozmieszczacz_;
 };
+
+#endif

@@ -129,7 +129,6 @@ void GlowneOkno::setupWykres(void)
 	wykres_->setTitle ("Temperatura");
 	wykres_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
 	wykres_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	//wykres_->setSizePolicy();
 	wykres_->setCanvasBackground(QBrush (Qt::white));
 	wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
