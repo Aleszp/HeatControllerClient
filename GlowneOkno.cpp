@@ -50,9 +50,10 @@ void GlowneOkno::setupRS(void)
 {
 	rs232_=new QSerialPort(this);
 	QStringList itemList;
-	
+	int wybor=QMessageBox::Retry;
 	do
 	{
+		
 		itemList.clear();
 		Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
 		{
@@ -61,9 +62,9 @@ void GlowneOkno::setupRS(void)
 		}
 		if(itemList.isEmpty())
 		{
-			int wybor;
 			
-			QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Abort|QMessageBox::Retry);
+			
+			QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Ignore|QMessageBox::Abort|QMessageBox::Retry);
 			wybor=pytanie.exec();
 			
 			if (wybor==QMessageBox::Abort) 
@@ -73,7 +74,7 @@ void GlowneOkno::setupRS(void)
 			}
 		}
 	}
-	while(itemList.isEmpty());
+	while(itemList.isEmpty()&&wybor!=QMessageBox::Ignore);
 	
 	WyborPortu dialog(itemList);
 	
