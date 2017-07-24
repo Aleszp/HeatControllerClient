@@ -1,7 +1,7 @@
 #Kompilator
 CXX=g++
 #Flagi kompilatora (wysoka optymalizacja, wyświetlanie ostrzeżeń o możliwych błędach, wybór standardu)
-CXXFLAGS=-O3 -Wall -pedantic -std=c++11 
+CXXFLAGS=-O3 -Wall -pedantic -std=c++11 -march=native -mtune=native
 #Flagi kompilatora wymagane do prawidłowej kompilacji z użyciem bibliotek Qt
 QTFLAGS= -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -fPIC 
 #Biblioteki
