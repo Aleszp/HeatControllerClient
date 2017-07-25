@@ -22,6 +22,7 @@ class GlowneOkno : public QMainWindow
 	public:
 		explicit GlowneOkno(QWidget* parent = nullptr);
 		~GlowneOkno();
+		void wyslijRozkaz(const char* rozkaz);
 
 	private:
 		void setupRS(void);
@@ -41,6 +42,11 @@ class GlowneOkno : public QMainWindow
 		QPushButton* zatrzymajGrzanie_;
 		QwtPlot* wykres_;
 		QVBoxLayout* glownyRozmieszczacz_;
+		
+	public slots:
+		void ustawTemperature(const unsigned t);
+		void ustawTemperature(const int t);
+		void odbierzDane(void);
 };
 
 #endif

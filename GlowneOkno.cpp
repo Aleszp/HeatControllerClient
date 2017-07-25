@@ -5,7 +5,6 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <cstdlib>
 
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
@@ -53,7 +52,6 @@ void GlowneOkno::setupRS(void)
 	int wybor=QMessageBox::Retry;
 	do
 	{
-		
 		itemList.clear();
 		Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) 
 		{
@@ -62,8 +60,6 @@ void GlowneOkno::setupRS(void)
 		}
 		if(itemList.isEmpty())
 		{
-			
-			
 			QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Ignore|QMessageBox::Abort|QMessageBox::Retry);
 			wybor=pytanie.exec();
 			
@@ -98,6 +94,8 @@ void GlowneOkno::setupRS(void)
 	rs232_->setParity (QSerialPort::NoParity);
 	rs232_->setFlowControl (QSerialPort::NoFlowControl);
     std::cerr<<rs232_->error()<<std::endl;
+    
+    QObject::connect(rs232_, SIGNAL(readyRead()),this, SLOT(odbierzDane()));
 }
 
 void GlowneOkno::setupTemperatura(void)
@@ -107,6 +105,8 @@ void GlowneOkno::setupTemperatura(void)
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
+    
+    QObject::connect(zadanaTemperatura_, SIGNAL(valueChanged(int)),this, SLOT(ustawTemperature(int)));
 }
 
 void GlowneOkno::setupWyslij(void)
@@ -127,12 +127,43 @@ void GlowneOkno::setupWykres(void)
 {
 	wykres_=new QwtPlot;
 	glownyRozmieszczacz_->addWidget(wykres_);
-	wykres_->setTitle ("Temperatura");
+	wykres_->setTitle ("Bieżąca temperatura próbki");
 	wykres_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
 	wykres_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
 	wykres_->setCanvasBackground(QBrush (Qt::white));
 	wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
+}
+
+void GlowneOkno::wyslijRozkaz(const char* rozkaz)
+{
+	rs232_->write(rozkaz);
+}
+
+void GlowneOkno::ustawTemperature(const unsigned t)
+{
+	char tmp[4];
+	sprintf(tmp,"T%u",t);
+	wyslijRozkaz(tmp);
+	std::cerr<<tmp<<std::endl;
+}
+
+void GlowneOkno::ustawTemperature(const int t)
+{
+	char tmp[4];
+	sprintf(tmp,"T%03i",t);
+	wyslijRozkaz(tmp);
+	std::cerr<<tmp<<std::endl;
+}
+
+void GlowneOkno::odbierzDane(void)
+{
+	char* const tmp=new char[1024];
+	rs232_->readLine(tmp,1023);
+	
+	std::cout<<tmp<<std::endl;
+	
+	delete[] tmp;
 }
 
 #include "GlowneOkno.moc"
