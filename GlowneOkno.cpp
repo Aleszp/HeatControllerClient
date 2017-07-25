@@ -161,7 +161,7 @@ void GlowneOkno::odbierzDane(void)
 	char* const tmp=new char[1024];
 	rs232_->readLine(tmp,1023);
 	
-	std::cout<<tmp<<std::endl;
+	std::cout<<tmp;
 	
 	delete[] tmp;
 }
