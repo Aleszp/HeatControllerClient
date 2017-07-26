@@ -15,8 +15,8 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 	
 	setupOkno();
     setupRozklad();
-    setupTemperatura();
     setupWyslij();
+    setupTemperatura();
     setupWykres();
     
     okno_->show();
@@ -105,8 +105,6 @@ void GlowneOkno::setupTemperatura(void)
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
-    
-    QObject::connect(zadanaTemperatura_, SIGNAL(valueChanged(int)),this, SLOT(ustawTemperature(int)));
 }
 
 void GlowneOkno::setupWyslij(void)
@@ -114,6 +112,8 @@ void GlowneOkno::setupWyslij(void)
 	wyslij_=new QPushButton("Ustaw");
 	wyslij_->setFixedSize(100,20);
 	glownyRozmieszczacz_->addWidget(wyslij_);
+	
+	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
 }
 
 void GlowneOkno::setupZatrzymajGrzanie(void)
@@ -140,17 +140,10 @@ void GlowneOkno::wyslijRozkaz(const char* rozkaz)
 	rs232_->write(rozkaz);
 }
 
-void GlowneOkno::ustawTemperature(const unsigned t)
+void GlowneOkno::ustawTemperature(void)
 {
 	char tmp[4];
-	sprintf(tmp,"T%u",t);
-	wyslijRozkaz(tmp);
-	std::cerr<<tmp<<std::endl;
-}
-
-void GlowneOkno::ustawTemperature(const int t)
-{
-	char tmp[4];
+	int t=zadanaTemperatura_->value();
 	sprintf(tmp,"T%03i",t);
 	wyslijRozkaz(tmp);
 	std::cerr<<tmp<<std::endl;

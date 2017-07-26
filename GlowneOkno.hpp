@@ -44,8 +44,7 @@ class GlowneOkno : public QMainWindow
 		QVBoxLayout* glownyRozmieszczacz_;
 		
 	public slots:
-		void ustawTemperature(const unsigned t);
-		void ustawTemperature(const int t);
+		void ustawTemperature(void);
 		void odbierzDane(void);
 };
 
