@@ -13,8 +13,6 @@
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_point_data.h>
 
-#include "DanePomiarowe_t.hpp"
-
 namespace Ui 
 {
 	class GlowneOkno;
