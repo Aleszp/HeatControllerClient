@@ -9,6 +9,10 @@
 #include <QtWidgets/QBoxLayout>
 
 #include <qwt/qwt_plot.h>
+#include <qwt/qwt_plot_curve.h>
+#include <qwt/qwt_point_data.h>
+
+#include "DanePomiarowe_t.hpp"
 
 namespace Ui 
 {
@@ -30,6 +34,7 @@ class GlowneOkno : public QMainWindow
 		void setupTemperatura(void);
 		void setupWyslij(void);
 		void setupZatrzymajGrzanie(void);
+		void setupReset(void);
 		void setupWykres(void);
 		void setupRozklad(void);
 		void obsluzBladRS(QSerialPort::SerialPortError blad);
@@ -41,12 +46,16 @@ class GlowneOkno : public QMainWindow
 		QSpinBox* zadanaTemperatura_;
 		QPushButton* wyslij_;
 		QPushButton* zatrzymajGrzanie_;
+		QPushButton* reset_;
 		QwtPlot* wykres_;
 		QVBoxLayout* glownyRozmieszczacz_;
+		std::vector <DanePomiarowe_t>* danePomiarowe_;
+		QwtPlotCurve* danePomiaroweWykres_;
 		
 	public slots:
 		void ustawTemperature(void);
 		void odbierzDane(void);
+		void zrestartujUrzadenie(void);
 };
 
 #endif

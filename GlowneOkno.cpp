@@ -12,11 +12,15 @@
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
+	danePomiarowe_=new std::vector <DanePomiarowe_t>;
+	danePomiaroweWykres_=new QwtPlotCurve;
+	
 	setupRS();
 	
 	setupOkno();
     setupRozklad();
     setupWyslij();
+    setupReset();
     setupTemperatura();
     setupWykres();
     
@@ -29,8 +33,11 @@ GlowneOkno::~GlowneOkno()
     delete rs232_;
     delete zadanaTemperatura_;
     delete wyslij_;
+    delete reset_;
     delete wykres_;
     delete okno_;
+    delete danePomiarowe_;
+    delete danePomiaroweWykres_;
 }
 
 void GlowneOkno::setupOkno(void)
@@ -94,6 +101,7 @@ void GlowneOkno::setupRS(void)
 	rs232_->setStopBits (QSerialPort::OneStop);
 	rs232_->setParity (QSerialPort::NoParity);
 	rs232_->setFlowControl (QSerialPort::NoFlowControl);
+	rs232_->clear();
     std::cerr<<rs232_->error()<<std::endl;
     
     QObject::connect(rs232_, SIGNAL(readyRead()),this, SLOT(odbierzDane()));
@@ -122,6 +130,15 @@ void GlowneOkno::setupZatrzymajGrzanie(void)
 	zatrzymajGrzanie_=new QPushButton("ZatrzymajGrzanie");
 	zatrzymajGrzanie_->setFixedSize(100,20);
 	glownyRozmieszczacz_->addWidget(zatrzymajGrzanie_);
+}
+
+void GlowneOkno::setupReset(void)
+{
+	reset_=new QPushButton("Reset");
+	reset_->setFixedSize(100,20);
+	glownyRozmieszczacz_->addWidget(reset_);
+	
+	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
 }
 
 void GlowneOkno::setupWykres(void)
@@ -160,17 +177,38 @@ void GlowneOkno::ustawTemperature(void)
 
 void GlowneOkno::odbierzDane(void)
 {
-	char* const tmp=new char[1024];
-	rs232_->readLine(tmp,1023);
+	char* const tmpTekst=new char[1024];
+	char* const tmp=new char[256];
+	rs232_->readLine(tmpTekst,1023);
+	rs232_->clear();
+	DanePomiarowe_t* tmpDane=new DanePomiarowe_t;
+	sscanf(tmpTekst,"%u %hu %s",&(tmpDane->t),&(tmpDane->T),tmp);
 	
-	std::cout<<tmp;
+	danePomiarowe_->push_back(*tmpDane);
 	
+	
+	std::cout<<tmpTekst;
+	
+	delete tmpDane;
+	delete[] tmpTekst;
 	delete[] tmp;
 }
 
 void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError blad)
 {
 	std::cerr<<"Błąd portu szeregowego: "<<blad<<std::endl;
+}
+
+void GlowneOkno::zrestartujUrzadenie(void)
+{
+	QSerialPort::SerialPortError error=rs232_->error();
+	if(error!=QSerialPort::NoError)
+	{
+		obsluzBladRS(error);
+		return;
+	}
+	rs232_->write("RRR");
+	std::cout<<"R"<<std::endl;
 }
 
 #include "GlowneOkno.moc"
