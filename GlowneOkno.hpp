@@ -32,6 +32,7 @@ class GlowneOkno : public QMainWindow
 		void setupZatrzymajGrzanie(void);
 		void setupWykres(void);
 		void setupRozklad(void);
+		void obsluzBladRS(QSerialPort::SerialPortError blad);
 
 	private:
 		Ui::GlowneOkno *ui;
@@ -46,7 +47,6 @@ class GlowneOkno : public QMainWindow
 	public slots:
 		void ustawTemperature(void);
 		void odbierzDane(void);
-		void obsluzBladRS(QSerialPort::SerialPortError  blad);
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
 
+
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
 	setupRS();
@@ -96,7 +97,6 @@ void GlowneOkno::setupRS(void)
     std::cerr<<rs232_->error()<<std::endl;
     
     QObject::connect(rs232_, SIGNAL(readyRead()),this, SLOT(odbierzDane()));
-    QObject::connect(rs232_, static_cast<void(QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error),this, &GlowneOkno::obsluzBladRS);
 }
 
 void GlowneOkno::setupTemperatura(void)
@@ -138,6 +138,12 @@ void GlowneOkno::setupWykres(void)
 
 void GlowneOkno::wyslijRozkaz(const char* rozkaz)
 {
+	QSerialPort::SerialPortError error=rs232_->error();
+	if(error!=QSerialPort::NoError)
+	{
+		obsluzBladRS(error);
+		return;
+	}
 	rs232_->write(rozkaz);
 }
 
@@ -162,7 +168,7 @@ void GlowneOkno::odbierzDane(void)
 	delete[] tmp;
 }
 
-void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError  blad)
+void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError blad)
 {
 	std::cerr<<"Błąd portu szeregowego: "<<blad<<std::endl;
 }
