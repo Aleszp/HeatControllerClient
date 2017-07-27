@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP_
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QVector>
 #include <QtSerialPort/QSerialPort>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
@@ -47,9 +48,11 @@ class GlowneOkno : public QMainWindow
 		QPushButton* wyslij_;
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
-		QwtPlot* wykres_;
 		QVBoxLayout* glownyRozmieszczacz_;
-		std::vector <DanePomiarowe_t>* danePomiarowe_;
+		
+		QVector <double> czas_;
+		QVector <double> temperatura_;
+		QwtPlot* wykres_;
 		QwtPlotCurve* danePomiaroweWykres_;
 		
 	public slots:

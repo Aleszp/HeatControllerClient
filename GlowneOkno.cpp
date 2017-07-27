@@ -12,9 +12,6 @@
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
-	danePomiarowe_=new std::vector <DanePomiarowe_t>;
-	danePomiaroweWykres_=new QwtPlotCurve;
-	
 	setupRS();
 	
 	setupOkno();
@@ -35,9 +32,12 @@ GlowneOkno::~GlowneOkno()
     delete wyslij_;
     delete reset_;
     delete wykres_;
-    delete okno_;
-    delete danePomiarowe_;
     delete danePomiaroweWykres_;
+    
+    czas_.clear();
+    temperatura_.clear();
+    
+    delete okno_;
 }
 
 void GlowneOkno::setupOkno(void)
@@ -151,6 +151,12 @@ void GlowneOkno::setupWykres(void)
 	wykres_->setCanvasBackground(QBrush (Qt::white));
 	wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
+	
+	danePomiaroweWykres_=new QwtPlotCurve;
+	
+	danePomiaroweWykres_->setTitle("Temperatura");
+	danePomiaroweWykres_->setPen(QPen(Qt::blue, 3) ),
+	danePomiaroweWykres_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
 }
 
 void GlowneOkno::wyslijRozkaz(const char* rozkaz)
@@ -166,32 +172,37 @@ void GlowneOkno::wyslijRozkaz(const char* rozkaz)
 
 void GlowneOkno::ustawTemperature(void)
 {
-	char* const tmp=new char[4];
+	char tmp[4];
 	int t=zadanaTemperatura_->value();
 	sprintf(tmp,"T%03i",t);
 	wyslijRozkaz(tmp);
 	std::cerr<<tmp<<std::endl;
-	
-	delete[] tmp;
 }
 
 void GlowneOkno::odbierzDane(void)
 {
-	char* const tmpTekst=new char[1024];
-	char* const tmp=new char[256];
+	char tmpTekst[1024];
+	char tmp[256];
+	uint32_t tmpCzas=0;
+	uint32_t tmpTemperatura=0;
+	
 	rs232_->readLine(tmpTekst,1023);
 	rs232_->clear();
-	DanePomiarowe_t* tmpDane=new DanePomiarowe_t;
-	sscanf(tmpTekst,"%u %hu %s",&(tmpDane->t),&(tmpDane->T),tmp);
+	sscanf(tmpTekst,"%u,%u,%s",&(tmpCzas),&(tmpTemperatura),tmp);
 	
-	danePomiarowe_->push_back(*tmpDane);
+	czas_.push_back((double)tmpCzas);
+	temperatura_.push_back((double)tmpTemperatura);
 	
+	danePomiaroweWykres_->setSamples(czas_,temperatura_);
+	danePomiaroweWykres_->attach(wykres_);
 	
-	std::cout<<tmpTekst;
-	
-	delete tmpDane;
-	delete[] tmpTekst;
-	delete[] tmp;
+	if(czas_.last()>120)
+		wykres_->setAxisScale (QwtPlot::xBottom, czas_.last()-120, czas_.last());
+	else
+		wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
+		
+	wykres_->replot();
+	std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
 }
 
 void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError blad)
@@ -209,6 +220,9 @@ void GlowneOkno::zrestartujUrzadenie(void)
 	}
 	rs232_->write("RRR");
 	std::cout<<"R"<<std::endl;
+	
+	czas_.clear();
+	temperatura_.clear();
 }
 
 #include "GlowneOkno.moc"
