@@ -362,6 +362,8 @@ void GlowneOkno::zrestartujUrzadenie(void)
 	{
 		czasChwilowy_.clear();
 		temperaturaChwilowa_.clear();
+		czasDlugookresowy_.clear();
+		temperaturaDlugookresowa_.clear();
 	}
 }
 
