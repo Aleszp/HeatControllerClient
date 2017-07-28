@@ -9,6 +9,23 @@
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
 
+const std::string bledy[14]=
+{
+	"Brak błędu",
+	"Nie znaleziono urządzenia",
+	"Brak uprawnień (być może port jest używany przez inny program)",
+	"Port jest już otwarty",
+	"Błąd parzystości",
+	"Błąd ramki",
+	"Błąd stanu przerwy (rodzaj błędu ramki)",
+	"Ogólny błąd wysyłania",
+	"Ogólny błąd odczytu",
+	"Błąd zasobów (np. port został odłączony w czasie pracy programu)",
+	"Niedozwolona operacja",
+	"Nieznany błąd",
+	"Upłynął limit czasu oczekiwania",
+	"Port nie został prawidłowo otwarty"
+};
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
@@ -205,9 +222,10 @@ void GlowneOkno::odbierzDane(void)
 	std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
 }
 
-void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError blad)
+void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
 {
-	std::cerr<<"Błąd portu szeregowego: "<<blad<<std::endl;
+	
+	std::cerr<<"Błąd portu szeregowego "<<kod_bledu<<": "<<bledy[kod_bledu]<<"."<<std::endl;
 }
 
 void GlowneOkno::zrestartujUrzadenie(void)

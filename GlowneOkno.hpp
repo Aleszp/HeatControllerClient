@@ -36,7 +36,7 @@ class GlowneOkno : public QMainWindow
 		void setupReset(void);
 		void setupWykres(void);
 		void setupRozklad(void);
-		void obsluzBladRS(QSerialPort::SerialPortError blad);
+		void obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
 
 	private:
 		Ui::GlowneOkno *ui;
