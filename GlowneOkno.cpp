@@ -293,7 +293,7 @@ void GlowneOkno::odbierzDane(void)
 			temperaturaChwilowa_.removeFirst();
 		}
 	
-		//if(!czasChwilowy_.empty())
+		if(!czasChwilowy_.empty())
 		{
 			danePomiaroweWykresChwilowy_->setSamples(czasChwilowy_,temperaturaChwilowa_);
 			danePomiaroweWykresChwilowy_->attach(wykresChwilowy_);
