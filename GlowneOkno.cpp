@@ -67,6 +67,8 @@ GlowneOkno::~GlowneOkno()
     czasDlugookresowy_.clear();
     temperaturaDlugookresowa_.clear();
     
+    
+    delete[] wiersze_;
     delete glownyRozmieszczacz_;
     delete okno_; 
 }
@@ -80,8 +82,17 @@ void GlowneOkno::setupOkno(void)
 
 void GlowneOkno::setupRozklad(void)
 {
+	iloscWierszy_=3;
+	
 	glownyRozmieszczacz_=new QVBoxLayout(okno_);
 	okno_->setLayout(glownyRozmieszczacz_);
+
+	wiersze_=new QHBoxLayout[iloscWierszy_];
+	
+	for(unsigned ii=0;ii<iloscWierszy_;ii++)
+	{
+	//	glownyRozmieszczacz_->addLayout(wiersze_[ii]);
+	}
 }
 
 void GlowneOkno::setupRS(void)
@@ -356,17 +367,12 @@ void GlowneOkno::zrestartujUrzadenie(void)
 
 void GlowneOkno::zatrzymajGrzanie(void)
 {
-	for(int i=0;i<czasChwilowy_.size();i++)
-	{
-		std::cout<<czasChwilowy_.value(i)<<":"<<temperaturaChwilowa_.value(i)<<"*C"<<std::endl;
-	}
-	
-	/*if(!wyslijRozkaz("T000")==OK)
+	if(!wyslijRozkaz("T000")==OK)
 	{
 		std::cout<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
 	}
 	else
-	std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;*/
+	std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
 }
 
 #include "GlowneOkno.moc"

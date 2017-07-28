@@ -44,6 +44,8 @@ class GlowneOkno : public QMainWindow
 		Ui::GlowneOkno *ui;
 		QWidget* okno_;
 		QVBoxLayout* glownyRozmieszczacz_;
+		QHBoxLayout* wiersze_;
+		unsigned iloscWierszy_;
 		
 		QSerialPort *rs232_;
 
