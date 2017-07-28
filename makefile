@@ -14,7 +14,7 @@ klient:	main.o GlowneOkno.o WyborPortu.o
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji głównej klasy programu
-GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp
+GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp KodyWyjsciowe.hpp
 		$(CXX) -o GlowneOkno.o -c GlowneOkno.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla głównej klasy programu (wymóg prawidłowego działania biblioteki Qt)
 GlowneOkno.moc:	GlowneOkno.hpp

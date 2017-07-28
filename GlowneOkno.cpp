@@ -8,8 +8,9 @@
 
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
+#include "KodyWyjsciowe.hpp"
 
-const std::string bledy[14]=
+const char* bledy[14]=
 {
 	"Brak błędu",
 	"Nie znaleziono urządzenia",
@@ -91,7 +92,7 @@ void GlowneOkno::setupRS(void)
 			if (wybor==QMessageBox::Abort) 
 			{
 				QMessageBox(QMessageBox::Critical, "Brak portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
-				exit(1);
+				exit(BRAK_PORTU);
 			}
 		}
 	}
@@ -224,8 +225,16 @@ void GlowneOkno::odbierzDane(void)
 
 void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
 {
-	
-	std::cerr<<"Błąd portu szeregowego "<<kod_bledu<<": "<<bledy[kod_bledu]<<"."<<std::endl;
+	char opis_bledu[128];
+	sprintf(opis_bledu,"Błąd portu szeregowego %i:\n%s.",kod_bledu,bledy[kod_bledu]);
+	QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", opis_bledu, QMessageBox::Ignore|QMessageBox::Abort);
+	std::cerr<<opis_bledu<<std::endl;
+			
+	if (pytanie.exec()==QMessageBox::Abort) 
+	{
+		QMessageBox(QMessageBox::Critical, "Błąd portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
+		exit(BLAD_PORTU);
+	}
 }
 
 void GlowneOkno::zrestartujUrzadenie(void)

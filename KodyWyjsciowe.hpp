@@ -1,0 +1,6 @@
+#ifndef BLEDY_HPP_
+#define BLEDY_HPP_
+
+enum KODY_WYJSCIOWE {OK=0,BRAK_PORTU=1,BLAD_PORTU=2};
+
+#endif
