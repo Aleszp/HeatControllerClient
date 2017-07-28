@@ -44,13 +44,16 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     
 GlowneOkno::~GlowneOkno()
 {
+	zadanaTemperatura_->setValue(0);
+	ustawTemperature();
     rs232_->close();
+    
     delete rs232_;
     delete zadanaTemperatura_;
     delete wyslij_;
     delete reset_;
     delete wykres_;
-    delete danePomiaroweWykres_;
+    //delete danePomiaroweWykres_;
     
     czas_.clear();
     temperatura_.clear();
@@ -89,7 +92,7 @@ void GlowneOkno::setupRS(void)
 			QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", "Nie wykryto żadnego portu szeregowego! \nSprawdź czy port jest dostępny i podejmij ponowną próbę konfiguracji lub zakończ program.", QMessageBox::Ignore|QMessageBox::Abort|QMessageBox::Retry);
 			wybor=pytanie.exec();
 			
-			if (wybor==QMessageBox::Abort) 
+			if(wybor==QMessageBox::Abort) 
 			{
 				QMessageBox(QMessageBox::Critical, "Brak portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
 				exit(BRAK_PORTU);
@@ -177,15 +180,30 @@ void GlowneOkno::setupWykres(void)
 	danePomiaroweWykres_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
 }
 
-void GlowneOkno::wyslijRozkaz(const char* rozkaz)
+bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
 {
-	QSerialPort::SerialPortError error=rs232_->error();
-	if(error!=QSerialPort::NoError)
+	QSerialPort::SerialPortError error;
+	bool stan=true;
+	do
 	{
-		obsluzBladRS(error);
-		return;
+		error=rs232_->error();
+		if(error!=QSerialPort::NoError)
+		{
+			stan=obsluzBladRS(error);
+		}
+		else
+		{
+			stan=false;
+		}
 	}
-	rs232_->write(rozkaz);
+	while(stan);
+	
+	if(error==QSerialPort::NoError)
+	{
+		rs232_->write(rozkaz);
+		return OK;
+	}
+	return BLAD_PORTU;
 }
 
 void GlowneOkno::ustawTemperature(void)
@@ -193,8 +211,9 @@ void GlowneOkno::ustawTemperature(void)
 	char tmp[4];
 	int t=zadanaTemperatura_->value();
 	sprintf(tmp,"T%03i",t);
-	wyslijRozkaz(tmp);
-	std::cerr<<tmp<<std::endl;
+	
+	if(wyslijRozkaz(tmp)==OK)
+		std::cerr<<tmp<<std::endl;
 }
 
 void GlowneOkno::odbierzDane(void)
@@ -223,33 +242,36 @@ void GlowneOkno::odbierzDane(void)
 	std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
 }
 
-void GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
+bool GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
 {
 	char opis_bledu[128];
 	sprintf(opis_bledu,"Błąd portu szeregowego %i:\n%s.",kod_bledu,bledy[kod_bledu]);
-	QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", opis_bledu, QMessageBox::Ignore|QMessageBox::Abort);
+	QMessageBox pytanie(QMessageBox::Warning, "Brak portu szeregowego!", opis_bledu, QMessageBox::Ignore|QMessageBox::Abort|QMessageBox::Retry);
 	std::cerr<<opis_bledu<<std::endl;
-			
-	if (pytanie.exec()==QMessageBox::Abort) 
+	
+	int wynik=pytanie.exec();
+	
+	if(wynik==QMessageBox::Abort) 
 	{
 		QMessageBox(QMessageBox::Critical, "Błąd portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
 		exit(BLAD_PORTU);
+		return false;
 	}
+	if(wynik==QMessageBox::Retry)
+	{
+		return true;
+	}
+	//jeśli ani abort ani retry, to ignore
+	return false;
 }
 
 void GlowneOkno::zrestartujUrzadenie(void)
 {
-	QSerialPort::SerialPortError error=rs232_->error();
-	if(error!=QSerialPort::NoError)
+	if(wyslijRozkaz("R")==OK)
 	{
-		obsluzBladRS(error);
-		return;
+		czas_.clear();
+		temperatura_.clear();
 	}
-	rs232_->write("RRR");
-	std::cout<<"R"<<std::endl;
-	
-	czas_.clear();
-	temperatura_.clear();
 }
 
 #include "GlowneOkno.moc"

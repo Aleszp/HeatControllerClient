@@ -25,7 +25,7 @@ class GlowneOkno : public QMainWindow
 	public:
 		explicit GlowneOkno(QWidget* parent = nullptr);
 		~GlowneOkno();
-		void wyslijRozkaz(const char* rozkaz);
+		bool wyslijRozkaz(const char* rozkaz);
 
 	private:
 		void setupRS(void);
@@ -36,17 +36,19 @@ class GlowneOkno : public QMainWindow
 		void setupReset(void);
 		void setupWykres(void);
 		void setupRozklad(void);
-		void obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
+		bool obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
 
 	private:
 		Ui::GlowneOkno *ui;
-		QSerialPort *rs232_;
 		QWidget* okno_;
+		QVBoxLayout* glownyRozmieszczacz_;
+		
+		QSerialPort *rs232_;
+
 		QSpinBox* zadanaTemperatura_;
 		QPushButton* wyslij_;
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
-		QVBoxLayout* glownyRozmieszczacz_;
 		
 		QVector <double> czas_;
 		QVector <double> temperatura_;
