@@ -91,7 +91,7 @@ void GlowneOkno::setupRozklad(void)
 	
 	for(unsigned ii=0;ii<iloscWierszy_;ii++)
 	{
-	//	glownyRozmieszczacz_->addLayout(wiersze_[ii]);
+		glownyRozmieszczacz_->addLayout(&wiersze_[ii]);
 	}
 }
 
@@ -161,7 +161,7 @@ void GlowneOkno::setupCzasTemperatura(void)
 void GlowneOkno::setupTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox;
-	glownyRozmieszczacz_->addWidget(zadanaTemperatura_);
+	wiersze_[0].addWidget(zadanaTemperatura_);
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
@@ -171,7 +171,7 @@ void GlowneOkno::setupWyslij(void)
 {
 	wyslij_=new QPushButton("Ustaw");
 	wyslij_->setFixedSize(100,20);
-	glownyRozmieszczacz_->addWidget(wyslij_);
+	wiersze_[0].addWidget(wyslij_);
 	
 	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
 }
@@ -180,7 +180,7 @@ void GlowneOkno::setupZatrzymajGrzanie(void)
 {
 	zatrzymajGrzanie_=new QPushButton("ZatrzymajGrzanie");
 	zatrzymajGrzanie_->setFixedSize(100,20);
-	glownyRozmieszczacz_->addWidget(zatrzymajGrzanie_);
+	wiersze_[1].addWidget(zatrzymajGrzanie_);
 	
 	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
 }
@@ -189,7 +189,7 @@ void GlowneOkno::setupReset(void)
 {
 	reset_=new QPushButton("Reset");
 	reset_->setFixedSize(100,20);
-	glownyRozmieszczacz_->addWidget(reset_);
+	wiersze_[1].addWidget(reset_);
 	
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
 }
@@ -197,7 +197,7 @@ void GlowneOkno::setupReset(void)
 void GlowneOkno::setupWykresChwilowy(void)
 {
 	wykresChwilowy_=new QwtPlot;
-	glownyRozmieszczacz_->addWidget(wykresChwilowy_);
+	wiersze_[2].addWidget(wykresChwilowy_);
 	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
 	wykresChwilowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
 	wykresChwilowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
@@ -215,7 +215,7 @@ void GlowneOkno::setupWykresChwilowy(void)
 void GlowneOkno::setupWykresDlugookresowy(void)
 {
 	wykresDlugookresowy_=new QwtPlot;
-	glownyRozmieszczacz_->addWidget(wykresDlugookresowy_);
+	wiersze_[2].addWidget(wykresDlugookresowy_);
 	wykresDlugookresowy_->setTitle ("Temperatura próbki");
 	wykresDlugookresowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
 	wykresDlugookresowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
