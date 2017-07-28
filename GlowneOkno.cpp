@@ -225,21 +225,29 @@ void GlowneOkno::odbierzDane(void)
 	
 	rs232_->readLine(tmpTekst,1023);
 	rs232_->clear();
-	sscanf(tmpTekst,"%u,%u,%s",&(tmpCzas),&(tmpTemperatura),tmp);
 	
-	czas_.push_back((double)tmpCzas);
-	temperatura_.push_back((double)tmpTemperatura);
+	if((tmpTekst[10]==',')&&(tmpTekst[17]==','))
+	{
+		sscanf(tmpTekst,"%u,%u,%s",&(tmpCzas),&(tmpTemperatura),tmp);
 	
-	danePomiaroweWykres_->setSamples(czas_,temperatura_);
-	danePomiaroweWykres_->attach(wykres_);
+		czas_.push_back((double)tmpCzas);
+		temperatura_.push_back((double)tmpTemperatura);
 	
-	if(czas_.last()>120)
-		wykres_->setAxisScale (QwtPlot::xBottom, czas_.last()-120, czas_.last());
-	else
-		wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
+		danePomiaroweWykres_->setSamples(czas_,temperatura_);
+		danePomiaroweWykres_->attach(wykres_);
+	
+		if(czas_.last()>120)
+			wykres_->setAxisScale (QwtPlot::xBottom, czas_.last()-120, czas_.last());
+		else
+			wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
 		
-	wykres_->replot();
-	std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
+		wykres_->replot();
+		std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
+	}
+	else
+	{
+		std::cout<<tmpTekst;
+	}
 }
 
 bool GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
