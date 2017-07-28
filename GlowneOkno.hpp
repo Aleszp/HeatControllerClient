@@ -30,11 +30,13 @@ class GlowneOkno : public QMainWindow
 	private:
 		void setupRS(void);
 		void setupOkno(void);
+		void setupCzasTemperatura(void);		
 		void setupTemperatura(void);
 		void setupWyslij(void);
 		void setupZatrzymajGrzanie(void);
 		void setupReset(void);
-		void setupWykres(void);
+		void setupWykresChwilowy(void);
+		void setupWykresDlugookresowy(void);
 		void setupRozklad(void);
 		bool obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
 
@@ -50,13 +52,19 @@ class GlowneOkno : public QMainWindow
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
 		
-		QVector <double> czas_;
-		QVector <double> temperatura_;
-		QwtPlot* wykres_;
-		QwtPlotCurve* danePomiaroweWykres_;
+		QVector <double> czasChwilowy_;
+		QVector <double> temperaturaChwilowa_;
+		QVector <double> czasDlugookresowy_;
+		QVector <double> temperaturaDlugookresowa_;
+		
+		QwtPlot* wykresChwilowy_;
+		QwtPlot* wykresDlugookresowy_;
+		QwtPlotCurve* danePomiaroweWykresChwilowy_;
+		QwtPlotCurve* danePomiaroweWykresDlugookresowy_;
 		
 	public slots:
 		void ustawTemperature(void);
+		void zatrzymajGrzanie(void);
 		void odbierzDane(void);
 		void zrestartujUrzadenie(void);
 };

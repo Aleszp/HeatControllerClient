@@ -32,12 +32,17 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
 	setupRS();
 	
+	setupCzasTemperatura();
+	
 	setupOkno();
     setupRozklad();
     setupWyslij();
     setupReset();
+    setupZatrzymajGrzanie();
     setupTemperatura();
-    setupWykres();
+    setupWykresChwilowy();
+    setupWykresDlugookresowy();
+    
     
     okno_->show();
 }
@@ -52,13 +57,18 @@ GlowneOkno::~GlowneOkno()
     delete zadanaTemperatura_;
     delete wyslij_;
     delete reset_;
-    delete wykres_;
-    //delete danePomiaroweWykres_;
+    delete zatrzymajGrzanie_;
+    delete wykresChwilowy_;
+    delete wykresDlugookresowy_;
+    delete danePomiaroweWykresChwilowy_;
     
-    czas_.clear();
-    temperatura_.clear();
+    czasChwilowy_.clear();
+    temperaturaChwilowa_.clear();
+    czasDlugookresowy_.clear();
+    temperaturaDlugookresowa_.clear();
     
-    delete okno_;
+    delete glownyRozmieszczacz_;
+    delete okno_; 
 }
 
 void GlowneOkno::setupOkno(void)
@@ -128,6 +138,15 @@ void GlowneOkno::setupRS(void)
     QObject::connect(rs232_, SIGNAL(readyRead()),this, SLOT(odbierzDane()));
 }
 
+void GlowneOkno::setupCzasTemperatura(void)
+{
+	czasChwilowy_.reserve(121);
+	temperaturaChwilowa_.reserve(121);
+	
+	czasDlugookresowy_.reserve(65536);
+	temperaturaDlugookresowa_.reserve(65536);
+}
+
 void GlowneOkno::setupTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox;
@@ -151,6 +170,8 @@ void GlowneOkno::setupZatrzymajGrzanie(void)
 	zatrzymajGrzanie_=new QPushButton("ZatrzymajGrzanie");
 	zatrzymajGrzanie_->setFixedSize(100,20);
 	glownyRozmieszczacz_->addWidget(zatrzymajGrzanie_);
+	
+	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
 }
 
 void GlowneOkno::setupReset(void)
@@ -162,22 +183,40 @@ void GlowneOkno::setupReset(void)
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
 }
 
-void GlowneOkno::setupWykres(void)
+void GlowneOkno::setupWykresChwilowy(void)
 {
-	wykres_=new QwtPlot;
-	glownyRozmieszczacz_->addWidget(wykres_);
-	wykres_->setTitle ("Bieżąca temperatura próbki");
-	wykres_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
-	wykres_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	wykres_->setCanvasBackground(QBrush (Qt::white));
-	wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
-	wykres_->setAxisScale (QwtPlot::yLeft, 0, 800);
+	wykresChwilowy_=new QwtPlot;
+	glownyRozmieszczacz_->addWidget(wykresChwilowy_);
+	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
+	wykresChwilowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykresChwilowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
+	wykresChwilowy_->setCanvasBackground(QBrush (Qt::white));
+	wykresChwilowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
+	wykresChwilowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
 	
-	danePomiaroweWykres_=new QwtPlotCurve;
+	danePomiaroweWykresChwilowy_=new QwtPlotCurve;
 	
-	danePomiaroweWykres_->setTitle("Temperatura");
-	danePomiaroweWykres_->setPen(QPen(Qt::blue, 3) ),
-	danePomiaroweWykres_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
+	danePomiaroweWykresChwilowy_->setTitle("Temperatura");
+	danePomiaroweWykresChwilowy_->setPen(QPen(Qt::blue, 3) ),
+	danePomiaroweWykresChwilowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
+}
+
+void GlowneOkno::setupWykresDlugookresowy(void)
+{
+	wykresDlugookresowy_=new QwtPlot;
+	glownyRozmieszczacz_->addWidget(wykresDlugookresowy_);
+	wykresDlugookresowy_->setTitle ("Temperatura próbki");
+	wykresDlugookresowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykresDlugookresowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
+	wykresDlugookresowy_->setCanvasBackground(QBrush (Qt::white));
+	wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
+	wykresDlugookresowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
+	
+	danePomiaroweWykresDlugookresowy_=new QwtPlotCurve;
+	
+	danePomiaroweWykresDlugookresowy_->setTitle("Temperatura");
+	danePomiaroweWykresDlugookresowy_->setPen(QPen(Qt::blue, 1) ),
+	danePomiaroweWykresDlugookresowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
 }
 
 bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
@@ -229,20 +268,53 @@ void GlowneOkno::odbierzDane(void)
 	if((tmpTekst[10]==',')&&(tmpTekst[17]==','))
 	{
 		sscanf(tmpTekst,"%u,%u,%s",&(tmpCzas),&(tmpTemperatura),tmp);
-	
-		czas_.push_back((double)tmpCzas);
-		temperatura_.push_back((double)tmpTemperatura);
-	
-		danePomiaroweWykres_->setSamples(czas_,temperatura_);
-		danePomiaroweWykres_->attach(wykres_);
-	
-		if(czas_.last()>120)
-			wykres_->setAxisScale (QwtPlot::xBottom, czas_.last()-120, czas_.last());
-		else
-			wykres_->setAxisScale (QwtPlot::xBottom, 0, 120);
-		
-		wykres_->replot();
 		std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
+		
+		czasChwilowy_.push_back((double)tmpCzas);
+		temperaturaChwilowa_.push_back((double)tmpTemperatura);
+		
+		czasDlugookresowy_.push_back((double)tmpCzas);
+		temperaturaDlugookresowa_.push_back((double)tmpTemperatura);
+	
+		while(czasChwilowy_.size()>120)
+		{
+			czasChwilowy_.removeFirst();
+			temperaturaChwilowa_.removeFirst();
+		}
+	
+		//if(!czasChwilowy_.empty())
+		{
+			danePomiaroweWykresChwilowy_->setSamples(czasChwilowy_,temperaturaChwilowa_);
+			danePomiaroweWykresChwilowy_->attach(wykresChwilowy_);
+	
+			if(czasChwilowy_.last()>120)
+				wykresChwilowy_->setAxisScale (QwtPlot::xBottom, czasChwilowy_.last()-120, czasChwilowy_.last());
+			else
+				wykresChwilowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
+			wykresChwilowy_->replot();
+		}
+		
+		while(czasDlugookresowy_.size()>65535)
+		{
+			czasDlugookresowy_.removeFirst();
+			temperaturaDlugookresowa_.removeFirst();
+		}	
+		
+		if(!czasDlugookresowy_.empty())
+		{
+			danePomiaroweWykresDlugookresowy_->setSamples(czasDlugookresowy_,temperaturaDlugookresowa_);
+			danePomiaroweWykresDlugookresowy_->attach(wykresDlugookresowy_);
+			if(czasDlugookresowy_.last()>120)
+			{
+				if(czasDlugookresowy_.last()>65535)
+					wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, czasDlugookresowy_.last()-65535, czasDlugookresowy_.last());
+				else
+					wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, czasDlugookresowy_.last());
+			}
+			else
+				wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
+			wykresDlugookresowy_->replot();
+		}
 	}
 	else
 	{
@@ -277,9 +349,24 @@ void GlowneOkno::zrestartujUrzadenie(void)
 {
 	if(wyslijRozkaz("R")==OK)
 	{
-		czas_.clear();
-		temperatura_.clear();
+		czasChwilowy_.clear();
+		temperaturaChwilowa_.clear();
 	}
+}
+
+void GlowneOkno::zatrzymajGrzanie(void)
+{
+	for(int i=0;i<czasChwilowy_.size();i++)
+	{
+		std::cout<<czasChwilowy_.value(i)<<":"<<temperaturaChwilowa_.value(i)<<"*C"<<std::endl;
+	}
+	
+	/*if(!wyslijRozkaz("T000")==OK)
+	{
+		std::cout<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
+	}
+	else
+	std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;*/
 }
 
 #include "GlowneOkno.moc"
