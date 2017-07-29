@@ -178,8 +178,8 @@ void GlowneOkno::setupWyslij(void)
 
 void GlowneOkno::setupZatrzymajGrzanie(void)
 {
-	zatrzymajGrzanie_=new QPushButton("ZatrzymajGrzanie");
-	zatrzymajGrzanie_->setFixedSize(100,20);
+	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie");
+	zatrzymajGrzanie_->setFixedSize(150,20);
 	wiersze_[1].addWidget(zatrzymajGrzanie_);
 	
 	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
@@ -206,9 +206,8 @@ void GlowneOkno::setupWykresChwilowy(void)
 	wykresChwilowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
 	
 	danePomiaroweWykresChwilowy_=new QwtPlotCurve;
-	
 	danePomiaroweWykresChwilowy_->setTitle("Temperatura");
-	danePomiaroweWykresChwilowy_->setPen(QPen(Qt::blue, 3) ),
+	danePomiaroweWykresChwilowy_->setPen(QPen(Qt::black, 3) ),
 	danePomiaroweWykresChwilowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
 }
 
@@ -224,9 +223,8 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 	wykresDlugookresowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
 	
 	danePomiaroweWykresDlugookresowy_=new QwtPlotCurve;
-	
 	danePomiaroweWykresDlugookresowy_->setTitle("Temperatura");
-	danePomiaroweWykresDlugookresowy_->setPen(QPen(Qt::blue, 1) ),
+	danePomiaroweWykresDlugookresowy_->setPen(QPen(Qt::black, 3) ),
 	danePomiaroweWykresDlugookresowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
 }
 
