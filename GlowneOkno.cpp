@@ -199,7 +199,7 @@ void GlowneOkno::setupReset(void)
 
 void GlowneOkno::setupWykresChwilowy(void)
 {
-	wykresChwilowy_=new QwtPlot(this);
+	wykresChwilowy_=new QwtPlot(okno_);
 	wiersze_[2].addWidget(wykresChwilowy_);
 	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
 	wykresChwilowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
@@ -216,7 +216,7 @@ void GlowneOkno::setupWykresChwilowy(void)
 
 void GlowneOkno::setupWykresDlugookresowy(void)
 {
-	wykresDlugookresowy_=new QwtPlot(this);
+	wykresDlugookresowy_=new QwtPlot(okno_);
 	wiersze_[2].addWidget(wykresDlugookresowy_);
 	wykresDlugookresowy_->setTitle ("Temperatura próbki");
 	wykresDlugookresowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
