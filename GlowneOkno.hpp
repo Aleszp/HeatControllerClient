@@ -54,10 +54,10 @@ class GlowneOkno : public QMainWindow
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
 		
-		QVector <double> czasChwilowy_;
-		QVector <double> temperaturaChwilowa_;
-		QVector <double> czasDlugookresowy_;
-		QVector <double> temperaturaDlugookresowa_;
+		QVector <double>* czasChwilowy_;
+		QVector <double>* temperaturaChwilowa_;
+		QVector <double>* czasDlugookresowy_;
+		QVector <double>* temperaturaDlugookresowa_;
 		
 		QwtPlot* wykresChwilowy_;
 		QwtPlot* wykresDlugookresowy_;
