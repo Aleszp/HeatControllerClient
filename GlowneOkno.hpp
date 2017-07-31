@@ -1,19 +1,25 @@
 #ifndef MAINWINDOW_HPP_
 #define MAINWINDOW_HPP_
 
+//Nagłówki z katalogu QtCore
 #include <QtCore/QtGlobal>
 #include <QtCore/QVector>
+
+//Nagłówki z katalogu QtSerialPort
 #include <QtSerialPort/QSerialPort>
 
+//Nagłówki z katalogu QtWidgets
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QBoxLayout>
 
+//Nagłówki qwt
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_point_data.h>
 
+//Nagłówki z katalogu programu
 #include "TrybProgramowalny.hpp"
 
 namespace Ui 

@@ -23,7 +23,7 @@ GlowneOkno.moc:	GlowneOkno.hpp
 WyborPortu.o:	WyborPortu.cpp WyborPortu.hpp
 		$(CXX) -o WyborPortu.o -c WyborPortu.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji klasy trybu programowalnego
-TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowalny.moc
+TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowalny.moc Struktury.hpp TypyWyliczeniowe.hpp
 		$(CXX) -o TrybProgramowalny.o -c TrybProgramowalny.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla klasu trybu programowalnego (wymóg prawidłowego działania biblioteki Qt)
 TrybProgramowalny.moc:	TrybProgramowalny.hpp

@@ -1,3 +1,4 @@
+//Nagłówki z katalogu programu
 #include "WyborPortu.hpp"
 
 WyborPortu::WyborPortu(const QStringList& items)

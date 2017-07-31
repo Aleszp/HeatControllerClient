@@ -1,11 +1,18 @@
+//Nagłówki z katalogu QtSerialPort
 #include <QtSerialPort/QSerialPortInfo>
+
+//Nagłówki z katalogu QtCore
 #include <QtCore/QDebug> 
+
+//Nagłówki z katalogu QtWidgets
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 
+//Standardowe nagłówki C/C++
 #include <cstdlib>
 #include <iostream>
 
+//Nagłówki z katalogu programu
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
 #include "TypyWyliczeniowe.hpp"
@@ -44,6 +51,7 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     setupWykresDlugookresowy();  
     
     automat_=new TrybProgramowalny(this);
+    wiersze_[1].addWidget(automat_);
     
     okno_->show();
 }
