@@ -8,8 +8,8 @@ QTFLAGS= -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5
 LIBS= -lQt5Core -lQt5Gui -lQt5Widgets -lqwt-qt5 -lQt5SerialPort
 
 #Konsolidacja programu
-klient:	main.o GlowneOkno.o WyborPortu.o
-		$(CXX) -o klient main.o GlowneOkno.o WyborPortu.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
+klient:	main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o
+		$(CXX) -o klient main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja wykonywalnej części pprogramu
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
@@ -22,6 +22,12 @@ GlowneOkno.moc:	GlowneOkno.hpp
 #Kompilacja implementacji klasy WyborPortu
 WyborPortu.o:	WyborPortu.cpp WyborPortu.hpp
 		$(CXX) -o WyborPortu.o -c WyborPortu.cpp $(CXXFLAGS) $(QTFLAGS)
+#Kompilacja implementacji klasy trybu programowalnego
+TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowalny.moc
+		$(CXX) -o TrybProgramowalny.o -c TrybProgramowalny.cpp $(CXXFLAGS) $(QTFLAGS)
+#Przygotowanie pliku typu .moc dla klasu trybu programowalnego (wymóg prawidłowego działania biblioteki Qt)
+TrybProgramowalny.moc:	TrybProgramowalny.hpp
+		moc TrybProgramowalny.hpp > TrybProgramowalny.moc	
 		
 #Usunięcie efektów kompilacji		
 clean:
