@@ -21,26 +21,8 @@ namespace Ui
 class GlowneOkno : public QMainWindow
 {
     Q_OBJECT
-
-	public:
-		explicit GlowneOkno(QWidget* parent = nullptr);
-		~GlowneOkno();
-		bool wyslijRozkaz(const char* rozkaz);
-
-	private:
-		void setupRS(void);
-		void setupOkno(void);
-		void setupCzasTemperatura(void);		
-		void setupTemperatura(void);
-		void setupWyslij(void);
-		void setupZatrzymajGrzanie(void);
-		void setupReset(void);
-		void setupWykresChwilowy(void);
-		void setupWykresDlugookresowy(void);
-		void setupRozklad(void);
-		bool obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
-
-	private:
+    
+    private:
 		Ui::GlowneOkno *ui;
 		QWidget* okno_;
 		QVBoxLayout* glownyRozmieszczacz_;
@@ -63,6 +45,23 @@ class GlowneOkno : public QMainWindow
 		QwtPlot* wykresDlugookresowy_;
 		QwtPlotCurve* danePomiaroweWykresChwilowy_;
 		QwtPlotCurve* danePomiaroweWykresDlugookresowy_;
+		
+		void setupRS(void);
+		void setupOkno(void);
+		void setupCzasTemperatura(void);		
+		void setupTemperatura(void);
+		void setupWyslij(void);
+		void setupZatrzymajGrzanie(void);
+		void setupReset(void);
+		void setupWykresChwilowy(void);
+		void setupWykresDlugookresowy(void);
+		void setupRozklad(void);
+		bool obsluzBladRS(QSerialPort::SerialPortError kod_bledu);
+
+	public:
+		explicit GlowneOkno(QWidget* parent = nullptr);
+		~GlowneOkno();
+		bool wyslijRozkaz(const char* rozkaz);
 		
 	public slots:
 		void ustawTemperature(void);
