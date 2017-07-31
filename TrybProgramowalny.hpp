@@ -10,10 +10,13 @@ class TrybProgramowalny : public QWidget
 	Q_OBJECT
 	
 	private:
-		QTimer zegar_;
+		QTimer* zegar_;
 	public:
 		TrybProgramowalny(QWidget* parent);
 		~TrybProgramowalny();
+		
+	public slots:
+		void obsluzMaszyneStanow(void);
 };
 
 #endif
