@@ -1,3 +1,4 @@
+#include <iostream>
 #include "TrybProgramowalny.hpp"
 
 TrybProgramowalny::TrybProgramowalny(QWidget* parent=0):QWidget(parent)
@@ -5,7 +6,7 @@ TrybProgramowalny::TrybProgramowalny(QWidget* parent=0):QWidget(parent)
 	zegar_=new QTimer(this);
 	zegar_->start(1000);
 	
-	QObject::connect(zegar_, SIGNAL(timeout()),this, SLOT(obsluzProgram()));
+	QObject::connect(zegar_, SIGNAL(timeout()),this, SLOT(obsluzMaszyneStanow()));
 }
 
 TrybProgramowalny::~TrybProgramowalny()
@@ -16,7 +17,7 @@ TrybProgramowalny::~TrybProgramowalny()
 void TrybProgramowalny::obsluzMaszyneStanow(void)
 {
 	/*Obsłuż maszynę stanów*/
-	
+	std::cout<<"test"<<std::endl;
 	zegar_->start(1000);	//ponownie uruchom zegar
 }
 

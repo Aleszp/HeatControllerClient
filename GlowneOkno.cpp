@@ -43,6 +43,8 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     setupWykresChwilowy();
     setupWykresDlugookresowy();  
     
+    automat_=new TrybProgramowalny(this);
+    
     okno_->show();
 }
     
@@ -66,6 +68,8 @@ GlowneOkno::~GlowneOkno()
     delete temperaturaChwilowa_;
     delete czasDlugookresowy_;
     delete temperaturaDlugookresowa_;
+    
+    delete automat_;
     
     delete[] wiersze_;
     delete glownyRozmieszczacz_;

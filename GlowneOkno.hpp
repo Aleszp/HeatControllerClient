@@ -13,6 +13,8 @@
 #include <qwt/qwt_plot_curve.h>
 #include <qwt/qwt_point_data.h>
 
+#include "TrybProgramowalny.hpp"
+
 namespace Ui 
 {
 	class GlowneOkno;
@@ -28,6 +30,8 @@ class GlowneOkno : public QMainWindow
 		QVBoxLayout* glownyRozmieszczacz_;
 		QHBoxLayout* wiersze_;
 		unsigned iloscWierszy_;
+		
+		TrybProgramowalny* automat_;
 		
 		QSerialPort *rs232_;
 
