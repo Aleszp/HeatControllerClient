@@ -8,7 +8,7 @@
 
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
-#include "KodyWyjsciowe.hpp"
+#include "TypyWyliczeniowe.hpp"
 
 const char* bledy[14]=
 {
