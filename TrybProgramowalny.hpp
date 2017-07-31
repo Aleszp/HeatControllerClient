@@ -1,9 +1,11 @@
 #ifndef TRYB_PROGRAMOWALNY_HPP_
 #define TRYB_PROGRAMOWALNY_HPP_
 
+#include <QtCore/QTimer>
+#include <QtCore/QVector>
+
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QPushButton>
-#include <QtCore/QTimer>
 
 class TrybProgramowalny : public QWidget
 {

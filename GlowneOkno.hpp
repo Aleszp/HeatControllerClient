@@ -4,6 +4,7 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QVector>
 #include <QtSerialPort/QSerialPort>
+
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QPushButton>
