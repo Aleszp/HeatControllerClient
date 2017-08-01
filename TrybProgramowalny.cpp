@@ -1,5 +1,7 @@
 //Nagłówki z katalogu QtCore
 #include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QString>
 
 //Nagłówki z katalogu QtWidgets
 #include <QtWidgets/QFileDialog>
@@ -67,16 +69,32 @@ int TrybProgramowalny::wczytajProgram(void)
 		QMessageBox::warning(this, tr("Brak nazwy pliku!"),"Nie podano nazwy pliku do wczytania.");
         return BRAK_NAZWY_PLIKU;
 	}
-    else 
-    {
-        QFile plik(nazwaPliku);
+    
+    QFile plik(nazwaPliku);
 
-        if (!plik.open(QIODevice::ReadOnly)) 
-        {
-            QMessageBox::warning(this, tr("Nie można otwożyć pliku!"),plik.errorString());
-            return BLAD_PLIKU;
-		}
+    if (!plik.open(QIODevice::ReadOnly|QIODevice::Text)) 
+    {
+        QMessageBox::warning(this, tr("Nie można otwożyć pliku!"),plik.errorString());
+        return BLAD_PLIKU;
 	}
+	
+	QString tmp;
+	
+	QTextStream strumienWejsciowy(&plik);
+	
+	while(!strumienWejsciowy.atEnd())
+	{
+		tmp=strumienWejsciowy.readLine(1023);	//Wczytaj linię (o maksymalnej długości 1023 znaków
+		
+		if(tmp[0]=='#')				//Jeśli zaczyna się od #, to jest komentarzem, pomiń linię
+			continue;
+			
+		//Jeśli jest to rozkaz ustawienia temperatury
+		
+		//Jeśli jest to rozkaz czekania
+	}
+	
+	plik.close();
 	
 	return OK;
 }
