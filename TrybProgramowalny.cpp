@@ -28,9 +28,10 @@ TrybProgramowalny::~TrybProgramowalny()
 
 void TrybProgramowalny::obsluzMaszyneStanow(void)
 {
+	zegar_->start(1000);	//ponownie uruchom zegar
+	
 	/*Obsłuż maszynę stanów*/
 	std::cout<<"test"<<std::endl;
-	zegar_->start(1000);	//ponownie uruchom zegar
 }
 
 void TrybProgramowalny::start(void)
