@@ -378,6 +378,7 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
 	}
+	std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
 }
 
 void GlowneOkno::zatrzymajGrzanie(void)

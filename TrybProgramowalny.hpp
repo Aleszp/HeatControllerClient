@@ -9,6 +9,7 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QLabel>
 
 //Nagłówki z katalogu programu
 #include "TypyWyliczeniowe.hpp"
@@ -23,6 +24,7 @@ class TrybProgramowalny : public QWidget
 		QVector <Rozkaz>* program_;
 		QPushButton* wczytaj_;
 		QPushButton* startStop_;
+		QLabel* pozostalyCzas_;
 		QHBoxLayout* rozmieszczacz_;
 		
 	public:
@@ -33,6 +35,7 @@ class TrybProgramowalny : public QWidget
 		void obsluzMaszyneStanow(void);
 		void start(void);
 		void stop(void);
+		int wczytajProgram(void);
 };
 
 #endif

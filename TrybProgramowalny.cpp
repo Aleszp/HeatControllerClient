@@ -1,3 +1,10 @@
+//Nagłówki z katalogu QtCore
+#include <QtCore/QFile>
+
+//Nagłówki z katalogu QtWidgets
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+
 //Standardowe nagłówki C/C++
 #include <iostream>
 
@@ -14,6 +21,7 @@ TrybProgramowalny::TrybProgramowalny(QWidget* parent=0):QWidget(parent)
 	
 	zegar_=new QTimer(this);
 	
+	QObject::connect(wczytaj_, SIGNAL(clicked(bool)),this, SLOT(wczytajProgram()));
 	QObject::connect(startStop_, SIGNAL(clicked(bool)),this, SLOT(start()));
 	QObject::connect(zegar_, SIGNAL(timeout()),this, SLOT(obsluzMaszyneStanow()));
 }
@@ -48,6 +56,29 @@ void TrybProgramowalny::stop(void)
 	startStop_->setText("Start");
 	
 	QObject::connect(startStop_, SIGNAL(clicked(bool)),this, SLOT(start()));
+}
+
+int TrybProgramowalny::wczytajProgram(void)
+{
+    QString nazwaPliku = QFileDialog::getOpenFileName(this,tr("Wczytaj program"), "",tr("Programy (*.pro);;Pliki tekstowe (*.txt);;Wszystkie pliki (*)"));
+    
+    if (nazwaPliku.isEmpty())
+    {
+		QMessageBox::warning(this, tr("Brak nazwy pliku!"),"Nie podano nazwy pliku do wczytania.");
+        return BRAK_NAZWY_PLIKU;
+	}
+    else 
+    {
+        QFile plik(nazwaPliku);
+
+        if (!plik.open(QIODevice::ReadOnly)) 
+        {
+            QMessageBox::warning(this, tr("Nie można otwożyć pliku!"),plik.errorString());
+            return BLAD_PLIKU;
+		}
+	}
+	
+	return OK;
 }
 
 #include "TrybProgramowalny.moc"
