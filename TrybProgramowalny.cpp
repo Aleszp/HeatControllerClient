@@ -21,6 +21,8 @@ TrybProgramowalny::TrybProgramowalny(QWidget* parent=0):QWidget(parent)
 	startStop_=new QPushButton("Start",this);
 	rozmieszczacz_->addWidget(startStop_);
 	
+	program_=new QVector <Rozkaz>;
+	
 	zegar_=new QTimer(this);
 	
 	QObject::connect(wczytaj_, SIGNAL(clicked(bool)),this, SLOT(wczytajProgram()));
@@ -34,14 +36,54 @@ TrybProgramowalny::~TrybProgramowalny()
 	delete wczytaj_;
 	delete startStop_;
 	delete rozmieszczacz_;
+	delete program_;
 }
 
-void TrybProgramowalny::obsluzMaszyneStanow(void)
+int TrybProgramowalny::obsluzMaszyneStanow(void)
 {
 	zegar_->start(1000);	//ponownie uruchom zegar
 	
+	
 	/*Obsłuż maszynę stanów*/
-	std::cout<<"test"<<std::endl;
+	
+	//Jeśli nie ma rozkazów do wykonania
+	if(program_->empty())
+	{
+		/*Wyświetl komunikat o zakończeniu programu*/
+		std::cout<<"KONIEC PROGRAMU"<<std::endl;
+		stop();
+		return OK;
+	}
+	
+	//Jeśli program ma czekać
+	if(program_->first().stan==CZEKAJ)
+	{
+		if(program_->first().wartosc>0)
+			program_->first().wartosc--;	//Odlicz 1 sekundę od oczekiwania
+		else
+			program_->removeFirst();
+			
+		return OK;
+	}
+	
+	//Jeśli program ma ustawić temperaturę
+	if(program_->first().stan==USTAW_TEMPERATURE)
+	{
+		/*Ustaw porządaną temperaturę*/
+		
+		//Usuń ten rozkaz z kolejki
+		program_->removeFirst();
+		return OK;
+	}	
+	
+	//Jeśli program nie ma ustalonego rozkazu
+	if(program_->first().stan==BRAK_ROZKAZU)
+	{
+		//Usuń ten rozkaz z kolejki
+		program_->removeFirst();
+	}
+	
+	return OK;
 }
 
 void TrybProgramowalny::start(void)
@@ -88,10 +130,18 @@ int TrybProgramowalny::wczytajProgram(void)
 		
 		if(tmp[0]=='#')				//Jeśli zaczyna się od #, to jest komentarzem, pomiń linię
 			continue;
-			
+		
 		//Jeśli jest to rozkaz ustawienia temperatury
+		if(tmp[0]=='T')
+		{
+			
+		}	
 		
 		//Jeśli jest to rozkaz czekania
+		if(tmp[0]=='C')
+		{
+			
+		}
 	}
 	
 	plik.close();

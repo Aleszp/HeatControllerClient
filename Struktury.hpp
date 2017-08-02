@@ -10,7 +10,7 @@
 struct Rozkaz
 {
 	enum STANY_MASZYNY stan;
-	uint32_t czas;
+	uint32_t wartosc;
 };
 
 typedef struct Rozkaz Rozkaz;

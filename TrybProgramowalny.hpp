@@ -32,7 +32,7 @@ class TrybProgramowalny : public QWidget
 		~TrybProgramowalny();
 		
 	public slots:
-		void obsluzMaszyneStanow(void);
+		int obsluzMaszyneStanow(void);
 		void start(void);
 		void stop(void);
 		int wczytajProgram(void);
