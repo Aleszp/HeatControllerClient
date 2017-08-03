@@ -1,4 +1,7 @@
 #TEST
+#Ustaw temperaturę 100*C
 T100
+#Czekaj 5 sekund
 C5
+#Ustaw temperaturę 50*C
 T50

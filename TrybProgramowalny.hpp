@@ -15,7 +15,7 @@
 #include "TypyWyliczeniowe.hpp"
 #include "Struktury.hpp"
 
-
+//Zadeklaruj istnienie klasy GlowneOkno
 class GlowneOkno;
 
 class TrybProgramowalny : public QWidget

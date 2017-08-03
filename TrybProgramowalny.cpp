@@ -71,11 +71,10 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 	//Jeśli program ma ustawić temperaturę
 	if(program_->first().stan==USTAW_TEMPERATURE)
 	{
-		/*Ustaw porządaną temperaturę*/
 		char tmp[4];
 		sprintf(tmp,"T%03i",program_->first().wartosc);
 	
-		if(rodzic_->wyslijRozkaz(tmp)==OK)
+		if(rodzic_->wyslijRozkaz(tmp)==OK)	//Ustaw porządaną temperaturę
 			std::cerr<<tmp<<std::endl;
 			
 		//Usuń ten rozkaz z kolejki
