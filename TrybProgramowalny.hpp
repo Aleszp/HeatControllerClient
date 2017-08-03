@@ -15,11 +15,15 @@
 #include "TypyWyliczeniowe.hpp"
 #include "Struktury.hpp"
 
+
+class GlowneOkno;
+
 class TrybProgramowalny : public QWidget
 {
 	Q_OBJECT
 	
 	private:
+		GlowneOkno* rodzic_;
 		QTimer* zegar_;
 		QVector <Rozkaz>* program_;
 		QPushButton* wczytaj_;
@@ -28,11 +32,11 @@ class TrybProgramowalny : public QWidget
 		QHBoxLayout* rozmieszczacz_;
 		
 	public:
-		TrybProgramowalny(QWidget* parent);
+		TrybProgramowalny(GlowneOkno* parent);
 		~TrybProgramowalny();
 		
 	public slots:
-		int obsluzMaszyneStanow(void);
+		void obsluzMaszyneStanow(void);
 		void start(void);
 		void stop(void);
 		int wczytajProgram(void);

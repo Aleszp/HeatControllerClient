@@ -12,9 +12,11 @@
 
 //Nagłówki z katalogu programu
 #include "TrybProgramowalny.hpp"
+#include "GlowneOkno.hpp"
 
-TrybProgramowalny::TrybProgramowalny(QWidget* parent=0):QWidget(parent)
+TrybProgramowalny::TrybProgramowalny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 {
+	rodzic_=rodzic;
 	rozmieszczacz_=new QHBoxLayout(this);
 	wczytaj_=new QPushButton("Wczytaj",this);
 	rozmieszczacz_->addWidget(wczytaj_);
@@ -39,41 +41,47 @@ TrybProgramowalny::~TrybProgramowalny()
 	delete program_;
 }
 
-int TrybProgramowalny::obsluzMaszyneStanow(void)
+void TrybProgramowalny::obsluzMaszyneStanow(void)
 {
 	zegar_->start(1000);	//ponownie uruchom zegar
 	
-	
-	/*Obsłuż maszynę stanów*/
-	
 	//Jeśli nie ma rozkazów do wykonania
-	if(program_->empty())
+	if(program_->isEmpty())
 	{
 		/*Wyświetl komunikat o zakończeniu programu*/
-		std::cout<<"KONIEC PROGRAMU"<<std::endl;
+		std::cout<<"KONIEC SKRYPTU"<<std::endl;
 		stop();
-		return OK;
+		return;
 	}
 	
 	//Jeśli program ma czekać
 	if(program_->first().stan==CZEKAJ)
 	{
-		if(program_->first().wartosc>0)
+		if(program_->first().wartosc>1)
+		{
 			program_->first().wartosc--;	//Odlicz 1 sekundę od oczekiwania
+			std::cout<<"Pozostały czas: "<<program_->first().wartosc<<" sekund(y)."<<std::endl;
+		}
 		else
 			program_->removeFirst();
 			
-		return OK;
+		return;
 	}
 	
 	//Jeśli program ma ustawić temperaturę
 	if(program_->first().stan==USTAW_TEMPERATURE)
 	{
 		/*Ustaw porządaną temperaturę*/
-		
+		char tmp[4];
+		sprintf(tmp,"T%03i",program_->first().wartosc);
+	
+		if(rodzic_->wyslijRozkaz(tmp)==OK)
+			std::cerr<<tmp<<std::endl;
+			
 		//Usuń ten rozkaz z kolejki
 		program_->removeFirst();
-		return OK;
+		
+		return;
 	}	
 	
 	//Jeśli program nie ma ustalonego rozkazu
@@ -82,16 +90,14 @@ int TrybProgramowalny::obsluzMaszyneStanow(void)
 		//Usuń ten rozkaz z kolejki
 		program_->removeFirst();
 	}
-	
-	return OK;
 }
 
 void TrybProgramowalny::start(void)
 {
-	zegar_->start(1000);
 	startStop_->setText("Stop");
-	
 	QObject::connect(startStop_, SIGNAL(clicked(bool)),this, SLOT(stop()));
+	
+	obsluzMaszyneStanow();
 }
 
 void TrybProgramowalny::stop(void)
@@ -104,7 +110,7 @@ void TrybProgramowalny::stop(void)
 
 int TrybProgramowalny::wczytajProgram(void)
 {
-    QString nazwaPliku = QFileDialog::getOpenFileName(this,tr("Wczytaj program"), "",tr("Programy (*.pro);;Pliki tekstowe (*.txt);;Wszystkie pliki (*)"));
+    QString nazwaPliku = QFileDialog::getOpenFileName(this,tr("Wczytaj program"), "",tr("Pliki tekstowe (*.txt);;Wszystkie pliki (*)"));
     
     if (nazwaPliku.isEmpty())
     {
@@ -121,7 +127,7 @@ int TrybProgramowalny::wczytajProgram(void)
 	}
 	
 	QString tmp;
-	
+	Rozkaz tmpRozkaz;
 	QTextStream strumienWejsciowy(&plik);
 	
 	while(!strumienWejsciowy.atEnd())
@@ -134,13 +140,25 @@ int TrybProgramowalny::wczytajProgram(void)
 		//Jeśli jest to rozkaz ustawienia temperatury
 		if(tmp[0]=='T')
 		{
+			tmpRozkaz.wartosc=tmp.mid(1,3).toUInt();
+			tmpRozkaz.stan=USTAW_TEMPERATURE;
+			program_->push_back(tmpRozkaz);
 			
+			std::cout<<"TEMPERATURA "<<tmpRozkaz.wartosc<<std::endl;
+			
+			continue;
 		}	
 		
 		//Jeśli jest to rozkaz czekania
 		if(tmp[0]=='C')
 		{
+			tmpRozkaz.wartosc=tmp.mid(1,8).toUInt();
+			tmpRozkaz.stan=CZEKAJ;
+			program_->push_back(tmpRozkaz);
 			
+			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			
+			continue;
 		}
 	}
 	
