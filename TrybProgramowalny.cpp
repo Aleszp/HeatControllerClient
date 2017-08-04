@@ -84,6 +84,41 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		return;
 	}	
 	
+	//Jeśli program ma zapytać urządzenie o średnią temperaturę
+	if(program_->first().stan==SREDNIA_TEMPERATURA)
+	{
+		if(rodzic_->wyslijRozkaz("A")==OK)	//Wyślij zapytanie o średnią temperaturę
+			std::cerr<<"A"<<std::endl;
+			
+		//Usuń ten rozkaz z kolejki
+		program_->removeFirst();
+		
+		return;	
+	}
+	
+	//Jeśli program ma zapytać urządzenie o temperaturę docelową
+	if(program_->first().stan==TEMPERATURA_DOCELOWA)
+	{
+		if(rodzic_->wyslijRozkaz("D")==OK)	//Wyślij zapytanie o średnią temperaturę
+			std::cerr<<"D"<<std::endl;
+			
+		//Usuń ten rozkaz z kolejki
+		program_->removeFirst();
+		
+		return;	
+	}
+	
+	//Jeśli program ma zrestartować urządzenie
+	if(program_->first().stan==RESTART)
+	{
+		rodzic_->zrestartujUrzadenie();
+			
+		//Usuń ten rozkaz z kolejki
+		program_->removeFirst();
+		
+		return;	
+	}
+	
 	//Jeśli program nie ma ustalonego rozkazu
 	if(program_->first().stan==BRAK_ROZKAZU)
 	{
@@ -145,6 +180,42 @@ int TrybProgramowalny::wczytajProgram(void)
 			program_->push_back(tmpRozkaz);
 			
 			std::cout<<"TEMPERATURA "<<tmpRozkaz.wartosc<<std::endl;
+			
+			continue;
+		}	
+		
+		//Jeśli jest to rozkaz zapytania o średnią temperaturę
+		if(tmp[0]=='A')
+		{
+			tmpRozkaz.wartosc=0;
+			tmpRozkaz.stan=SREDNIA_TEMPERATURA;
+			program_->push_back(tmpRozkaz);
+			
+			std::cout<<"PODAJ ŚREDNIĄ TEMPERATURĘ"<<std::endl;
+			
+			continue;
+		}
+		
+		//Jeśli jest to rozkaz pozyskania temperatury docelowej
+		if(tmp[0]=='D')
+		{
+			tmpRozkaz.wartosc=0;
+			tmpRozkaz.stan=TEMPERATURA_DOCELOWA;
+			program_->push_back(tmpRozkaz);
+			
+			std::cout<<"PODAJ DOCELOWĄ TEMPERATURĘ"<<std::endl;
+			
+			continue;
+		}	
+		
+		//Jeśli jest to rozkaz restartu układu
+		if(tmp[0]=='R')
+		{
+			tmpRozkaz.wartosc=0;
+			tmpRozkaz.stan=RESTART;
+			program_->push_back(tmpRozkaz);
+			
+			std::cout<<"RESTART"<<std::endl;
 			
 			continue;
 		}	

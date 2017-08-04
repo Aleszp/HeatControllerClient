@@ -1,9 +1,18 @@
 #TEST
+#ZESTARTUJ URZĄDZENIE
+R
 #Ustaw temperaturę 100*C
 T100
-#Czekaj 5 sekund, 10 minut i godzinę
+#Czekaj 5 sekund
 S5
-M10
+#ZAPYTAJ O TEMPERATURĘ DOCELOWĄ
+D
+#CZEKAJ 1 minutę
+M1
+#ZAPYTAJ O ŚREDNIĄ TEMPERATURĘ
+A
+#CZEKAJ 1.5 godziny
 H1
+M30
 #Ustaw temperaturę 50*C
 T50
