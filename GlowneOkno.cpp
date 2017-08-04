@@ -37,6 +37,8 @@ const char* bledy[14]=
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
+	konsola_=false;
+	
 	setupRS();
 	
 	setupCzasTemperatura();
@@ -144,7 +146,7 @@ void GlowneOkno::setupRS(void)
 		if(wynik==QDialog::Rejected)
 		{
 			QMessageBox(QMessageBox::Critical, "Nie wybrano portu szeregowego!", "Koniec programu.", QMessageBox::Ok).exec();
-			exit(2);
+			exit(NIE_WYBRANO_PORTU);
 		}
 	}
 	while(wynik != QDialog::Accepted);
@@ -185,8 +187,8 @@ void GlowneOkno::setupTemperatura(void)
 
 void GlowneOkno::setupWyslij(void)
 {
-	wyslij_=new QPushButton("Ustaw");
-	wyslij_->setFixedSize(100,20);
+	wyslij_=new QPushButton("Ustaw",this);
+	wyslij_->setFixedSize(150,30);
 	wiersze_[0].addWidget(wyslij_);
 	
 	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
@@ -194,8 +196,8 @@ void GlowneOkno::setupWyslij(void)
 
 void GlowneOkno::setupZatrzymajGrzanie(void)
 {
-	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie");
-	zatrzymajGrzanie_->setFixedSize(150,20);
+	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie",this);
+	zatrzymajGrzanie_->setFixedSize(150,30);
 	wiersze_[1].addWidget(zatrzymajGrzanie_);
 	
 	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
@@ -203,8 +205,8 @@ void GlowneOkno::setupZatrzymajGrzanie(void)
 
 void GlowneOkno::setupReset(void)
 {
-	reset_=new QPushButton("Reset");
-	reset_->setFixedSize(100,20);
+	reset_=new QPushButton("Reset",this);
+	reset_->setFixedSize(150,30);
 	wiersze_[1].addWidget(reset_);
 	
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
@@ -379,17 +381,19 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
 	}
-	std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
+	if(konsola_)
+		std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
 }
 
 void GlowneOkno::zatrzymajGrzanie(void)
 {
 	if(!wyslijRozkaz("T000")==OK)
 	{
-		std::cout<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
+		std::cerr<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
 	}
 	else
-	std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
+	if(konsola_)
+		std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
 }
 
 #include "GlowneOkno.moc"

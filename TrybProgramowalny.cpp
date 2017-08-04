@@ -215,7 +215,8 @@ int TrybProgramowalny::wczytajProgram(void)
 			tmpRozkaz.stan=USTAW_TEMPERATURE;
 			program_->push_back(tmpRozkaz);
 			
-			std::cout<<"TEMPERATURA "<<tmpRozkaz.wartosc<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"TEMPERATURA "<<tmpRozkaz.wartosc<<std::endl;
 			
 			continue;
 		}	
@@ -228,7 +229,8 @@ int TrybProgramowalny::wczytajProgram(void)
 			tmpRozkaz.stan=SREDNIA_TEMPERATURA;
 			program_->push_back(tmpRozkaz);
 			
-			std::cout<<"PODAJ ŚREDNIĄ TEMPERATURĘ"<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"PODAJ ŚREDNIĄ TEMPERATURĘ"<<std::endl;
 			
 			continue;
 		}
@@ -241,7 +243,8 @@ int TrybProgramowalny::wczytajProgram(void)
 			tmpRozkaz.stan=TEMPERATURA_DOCELOWA;
 			program_->push_back(tmpRozkaz);
 			
-			std::cout<<"PODAJ DOCELOWĄ TEMPERATURĘ"<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"PODAJ DOCELOWĄ TEMPERATURĘ"<<std::endl;
 			
 			continue;
 		}	
@@ -254,7 +257,8 @@ int TrybProgramowalny::wczytajProgram(void)
 			tmpRozkaz.stan=RESTART;
 			program_->push_back(tmpRozkaz);
 			
-			std::cout<<"RESTART"<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"RESTART"<<std::endl;
 			
 			continue;
 		}	
@@ -274,7 +278,8 @@ int TrybProgramowalny::wczytajProgram(void)
 				tmpRozkaz.stan=CZEKAJ;
 				program_->push_back(tmpRozkaz);
 			}
-			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
 			
 			continue;
 		}
@@ -294,7 +299,8 @@ int TrybProgramowalny::wczytajProgram(void)
 				tmpRozkaz.stan=CZEKAJ;
 				program_->push_back(tmpRozkaz);
 			}
-			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
 			
 			continue;
 		}
@@ -314,7 +320,8 @@ int TrybProgramowalny::wczytajProgram(void)
 				tmpRozkaz.stan=CZEKAJ;
 				program_->push_back(tmpRozkaz);
 			}
-			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			if(rodzic_->getKonsola())
+				std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
 			
 			continue;
 		}

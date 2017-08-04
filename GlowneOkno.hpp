@@ -57,6 +57,8 @@ class GlowneOkno : public QMainWindow
 		QwtPlotCurve* danePomiaroweWykresChwilowy_;
 		QwtPlotCurve* danePomiaroweWykresDlugookresowy_;
 		
+		bool konsola_; 
+		
 		void setupRS(void);
 		void setupOkno(void);
 		void setupCzasTemperatura(void);		
@@ -73,7 +75,8 @@ class GlowneOkno : public QMainWindow
 		explicit GlowneOkno(QWidget* parent = nullptr);
 		~GlowneOkno();
 		bool wyslijRozkaz(const char* rozkaz);
-		inline void setZadanaTemperatura_(uint16_t wartosc){zadanaTemperatura_->setValue(wartosc);}		
+		inline void setZadanaTemperatura_(uint16_t wartosc){zadanaTemperatura_->setValue(wartosc);}	
+		inline bool getKonsola(void){return konsola_;}	
 		
 	public slots:
 		void ustawTemperature(void);
