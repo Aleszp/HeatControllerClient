@@ -11,6 +11,9 @@
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QLabel>
 
+//Standardowe nagłówki C/C++
+#include <cstdint>
+
 //Nagłówki z katalogu programu
 #include "TypyWyliczeniowe.hpp"
 #include "Struktury.hpp"
@@ -29,7 +32,12 @@ class TrybProgramowalny : public QWidget
 		QPushButton* wczytaj_;
 		QPushButton* startStop_;
 		QLabel* pozostalyCzas_;
-		QHBoxLayout* rozmieszczacz_;
+		QVBoxLayout* rozmieszczacz_;
+		QHBoxLayout* rozmieszczaczeWierszowe_;
+		QLabel* czasWskaznik_;
+		uint32_t* czasCalkowity_;
+		
+		void wyswietlTekst(char const* tekst, bool czas=false, bool konsola=false);
 		
 	public:
 		TrybProgramowalny(GlowneOkno* parent);
