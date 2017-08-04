@@ -67,10 +67,11 @@ GlowneOkno::~GlowneOkno()
     delete wyslij_;
     delete reset_;
     delete zatrzymajGrzanie_;
-    delete wykresChwilowy_;
-    delete wykresDlugookresowy_;
+    
     delete danePomiaroweWykresChwilowy_;
     delete danePomiaroweWykresDlugookresowy_;
+    delete wykresChwilowy_;
+    delete wykresDlugookresowy_;
     
     delete czasChwilowy_;
     delete temperaturaChwilowa_;
