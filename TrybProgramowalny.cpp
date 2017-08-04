@@ -9,6 +9,7 @@
 
 //Standardowe nagłówki C/C++
 #include <iostream>
+#include <iomanip>
 
 //Nagłówki z katalogu programu
 #include "TrybProgramowalny.hpp"
@@ -60,7 +61,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		if(program_->first().wartosc>1)
 		{
 			program_->first().wartosc--;	//Odlicz 1 sekundę od oczekiwania
-			std::cout<<"Pozostały czas: "<<program_->first().wartosc<<" sekund(y)."<<std::endl;
+			std::cout<<"Pozostały czas: "<<std::setfill('0') <<std::setw(2)<<program_->first().wartosc/3600<<":"<<std::setfill('0')<<std::setw(2)<<(program_->first().wartosc%3600)/60<<":"<<std::setfill('0')<<std::setw(2)<<((program_->first().wartosc)%3600)%60<<std::endl;
 		}
 		else
 			program_->removeFirst();
@@ -148,13 +149,58 @@ int TrybProgramowalny::wczytajProgram(void)
 			continue;
 		}	
 		
-		//Jeśli jest to rozkaz czekania
-		if(tmp[0]=='C')
+		//Jeśli jest to rozkaz czekania (w sekundach)
+		if(tmp[0]=='S')
 		{
 			tmpRozkaz.wartosc=tmp.mid(1,8).toUInt();
-			tmpRozkaz.stan=CZEKAJ;
-			program_->push_back(tmpRozkaz);
 			
+			if(program_->last().stan==CZEKAJ)	//Jeśli poprzedni rozkaz nakazywał czekać: dolicz do jego czasu oczekiwania nowe oczekiwanie
+			{
+				program_->last().wartosc+=tmpRozkaz.wartosc;
+			}
+			else
+			{
+				tmpRozkaz.stan=CZEKAJ;
+				program_->push_back(tmpRozkaz);
+			}
+			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			
+			continue;
+		}
+		
+		//Jeśli jest to rozkaz czekania (w minutach)
+		if(tmp[0]=='M')
+		{
+			tmpRozkaz.wartosc=tmp.mid(1,8).toUInt()*60;
+			
+			if(program_->last().stan==CZEKAJ) //Jeśli poprzedni rozkaz nakazywał czekać: dolicz do jego czasu oczekiwania nowe oczekiwanie
+			{
+				program_->last().wartosc+=tmpRozkaz.wartosc;
+			}
+			else
+			{
+				tmpRozkaz.stan=CZEKAJ;
+				program_->push_back(tmpRozkaz);
+			}
+			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
+			
+			continue;
+		}
+		
+		//Jeśli jest to rozkaz czekania (w godzinach)
+		if(tmp[0]=='H')
+		{
+			tmpRozkaz.wartosc=tmp.mid(1,8).toUInt()*3600;
+			
+			if(program_->last().stan==CZEKAJ)	//Jeśli poprzedni rozkaz nakazywał czekać: dolicz do jego czasu oczekiwania nowe oczekiwanie
+			{
+				program_->last().wartosc+=tmpRozkaz.wartosc;
+			}
+			else
+			{
+				tmpRozkaz.stan=CZEKAJ;
+				program_->push_back(tmpRozkaz);
+			}
 			std::cout<<"CZEKAJ "<<tmpRozkaz.wartosc<<std::endl;
 			
 			continue;
