@@ -65,7 +65,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 	if(program_->isEmpty())
 	{
 		/*Wyświetl komunikat o zakończeniu programu*/
-		wyswietlTekst("Zakończono program użytkownika.",false);
+		wyswietlTekst("Zakończono program użytkownika.",false,rodzic_->getKonsola());
 		stop();
 		return;
 	}
@@ -85,7 +85,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		}
 		else
 		{
-			wyswietlTekst("Krok oczekiwania zakończony.",true);
+			wyswietlTekst("Krok oczekiwania zakończony.",true,rodzic_->getKonsola());
 			program_->removeFirst();
 		}
 			
@@ -102,7 +102,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		{
 			rodzic_->setZadanaTemperatura_(program_->first().wartosc);
 			std::cerr<<tmp<<std::endl;
-			wyswietlTekst("Ustawiono temperaturę docelową.",true);
+			wyswietlTekst("Ustawiono temperaturę docelową.",true,rodzic_->getKonsola());
 		}
 			
 		//Usuń ten rozkaz z kolejki
@@ -117,7 +117,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		if(rodzic_->wyslijRozkaz("A")==OK)	//Wyślij zapytanie o średnią temperaturę
 		{
 			std::cerr<<"A"<<std::endl;
-			wyswietlTekst("Pozyskano średnią temperaturę.",true);
+			wyswietlTekst("Pozyskano średnią temperaturę.",true,rodzic_->getKonsola());
 		}
 			
 		//Usuń ten rozkaz z kolejki
@@ -132,7 +132,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		if(rodzic_->wyslijRozkaz("D")==OK)	//Wyślij zapytanie o średnią temperaturę
 		{
 			std::cerr<<"D"<<std::endl;
-			wyswietlTekst("Pozyskano temperaturę docelową.",true);
+			wyswietlTekst("Pozyskano temperaturę docelową.",true,rodzic_->getKonsola());
 		}
 		//Usuń ten rozkaz z kolejki
 		program_->removeFirst();
@@ -144,7 +144,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 	if(program_->first().stan==RESTART)
 	{
 		rodzic_->zrestartujUrzadenie();
-		wyswietlTekst("Zrestartowano urządzenie.",true);
+		wyswietlTekst("Zrestartowano urządzenie.",true,rodzic_->getKonsola());
 		//Usuń ten rozkaz z kolejki
 		program_->removeFirst();
 		
@@ -154,7 +154,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 	//Jeśli program nie ma ustalonego rozkazu
 	if(program_->first().stan==BRAK_ROZKAZU)
 	{
-		wyswietlTekst("Pominięto pusty rozkaz.",true);
+		wyswietlTekst("Pominięto pusty rozkaz.",true,rodzic_->getKonsola());
 		//Usuń ten rozkaz z kolejki
 		program_->removeFirst();
 	}
@@ -173,7 +173,7 @@ void TrybProgramowalny::stop(void)
 	zegar_->stop();
 	startStop_->setText("Start");
 	
-	wyswietlTekst("Użytkownik zatrzymał program.",true);
+	wyswietlTekst("Użytkownik zatrzymał program.",true,rodzic_->getKonsola());
 	
 	QObject::connect(startStop_, SIGNAL(clicked(bool)),this, SLOT(start()));
 }
