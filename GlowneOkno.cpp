@@ -380,20 +380,30 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		temperaturaChwilowa_->clear();
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
+		automat_->stop();
+		
+		if(konsola_)
+			std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
 	}
-	if(konsola_)
-		std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
+	else
+	{
+		QMessageBox(QMessageBox::Critical, "Błąd!", "Nie można zrestartować urządzenia!", QMessageBox::Ok).exec();
+	}
 }
 
 void GlowneOkno::zatrzymajGrzanie(void)
 {
 	if(!wyslijRozkaz("T000")==OK)
 	{
-		std::cerr<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
+		QMessageBox(QMessageBox::Critical, "Błąd!", "Nie można zatrzymać grzania!", QMessageBox::Ok).exec();
+		if(konsola_)
+			std::cerr<<"NIE MOŻNA ZATRZYMAĆ GRZANIA!"<<std::endl;
+		return;
 	}
 	else
 	if(konsola_)
 		std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
+	automat_->stop();
 }
 
 #include "GlowneOkno.moc"

@@ -1,5 +1,5 @@
 #TEST
-#ZESTARTUJ URZĄDZENIE
+#ZRESTARTUJ URZĄDZENIE
 R
 #Ustaw temperaturę 100*C
 T100
@@ -13,6 +13,6 @@ M1
 A
 #CZEKAJ 1.5 godziny
 H1
-M30
+M90
 #Ustaw temperaturę 50*C
 T50
