@@ -225,11 +225,11 @@ void GlowneOkno::setupWykresChwilowy(void)
 	wykresChwilowy_->setAxisTitle (QwtPlot::yRight, "Temperatura /℃");
 	wykresChwilowy_->setCanvasBackground(QBrush (Qt::white));
 	
-	
 	danePomiaroweWykresChwilowy_=new QwtPlotCurve;
 	danePomiaroweWykresChwilowy_->setTitle("Temperatura");
 	danePomiaroweWykresChwilowy_->setPen(QPen(Qt::black, 3) ),
 	danePomiaroweWykresChwilowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
+	danePomiaroweWykresChwilowy_->setAxes(QwtPlot::xBottom, QwtPlot::yRight);
 }
 
 void GlowneOkno::setupWykresDlugookresowy(void)
@@ -245,11 +245,11 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 	wykresDlugookresowy_->setAxisTitle (QwtPlot::yRight, "Temperatura /℃");
 	wykresDlugookresowy_->setCanvasBackground(QBrush (Qt::white));
 	
-	
 	danePomiaroweWykresDlugookresowy_=new QwtPlotCurve;
 	danePomiaroweWykresDlugookresowy_->setTitle("Temperatura");
 	danePomiaroweWykresDlugookresowy_->setPen(QPen(Qt::black, 3) ),
 	danePomiaroweWykresDlugookresowy_->setRenderHint(QwtPlotItem::RenderAntialiased, true);	
+	danePomiaroweWykresDlugookresowy_->setAxes(QwtPlot::xBottom, QwtPlot::yRight);
 }
 
 bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
