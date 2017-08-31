@@ -52,6 +52,7 @@ class TrybManualny : public QWidget
 		void zrestartujUrzadenie(void);
 		void ustawTemperature(bool ask=true);
 		void zatrzymajGrzanie(void);
+		
 };
 
 #endif

@@ -49,7 +49,6 @@ TrybProgramowalny::TrybProgramowalny(GlowneOkno* rodzic=0):QWidget((QMainWindow*
 TrybProgramowalny::~TrybProgramowalny()
 {
 	stop();
-	
 	delete zegar_;
 	delete wczytaj_;
 	delete startStop_;

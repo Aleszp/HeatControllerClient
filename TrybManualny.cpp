@@ -1,3 +1,6 @@
+//Standardowe nagłówki C/C++
+#include <iostream>
+
 //Nagłówki z katalogu programu
 #include "TrybManualny.hpp"
 #include "GlowneOkno.hpp"
@@ -23,13 +26,13 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 
 TrybManualny::~TrybManualny()
 {
+	rodzic_=nullptr;
 	delete zadanaTemperatura_;
     delete wyslij_;
     delete reset_;
     delete zatrzymajGrzanie_;
-    
-    delete rozmieszczacz_;
     delete[] wiersze_;
+    delete rozmieszczacz_;
 }
 
 void TrybManualny::setupTemperatura(void)

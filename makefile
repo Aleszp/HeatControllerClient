@@ -14,7 +14,7 @@ klient:	main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o TrybManualny.o
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji głównej klasy programu
-GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp TypyWyliczeniowe.hpp TrybProgramowalny.hpp
+GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp TypyWyliczeniowe.hpp TrybProgramowalny.hpp TrybManualny.hpp
 		$(CXX) -o GlowneOkno.o -c GlowneOkno.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla głównej klasy programu (wymóg prawidłowego działania biblioteki Qt)
 GlowneOkno.moc:	GlowneOkno.hpp
@@ -24,14 +24,14 @@ WyborPortu.o:	WyborPortu.cpp WyborPortu.hpp
 		$(CXX) -o WyborPortu.o -c WyborPortu.cpp $(CXXFLAGS) $(QTFLAGS)
 		
 #Kompilacja implementacji klasy trybu manualnego
-TrybManualny.o: TrybManualny.cpp TrybManualny.hpp TrybManualny.moc
+TrybManualny.o: TrybManualny.cpp TrybManualny.hpp TrybManualny.moc GlowneOkno.hpp
 		$(CXX) -o TrybManualny.o -c TrybManualny.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla klasu trybu manualnego (wymóg prawidłowego działania biblioteki Qt)
 TrybManualny.moc:	TrybManualny.hpp
 		moc TrybManualny.hpp > TrybManualny.moc	
 				
 #Kompilacja implementacji klasy trybu programowalnego
-TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowalny.moc Struktury.hpp TypyWyliczeniowe.hpp
+TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowalny.moc Struktury.hpp TypyWyliczeniowe.hpp GlowneOkno.hpp
 		$(CXX) -o TrybProgramowalny.o -c TrybProgramowalny.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla klasu trybu programowalnego (wymóg prawidłowego działania biblioteki Qt)
 TrybProgramowalny.moc:	TrybProgramowalny.hpp

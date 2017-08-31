@@ -81,7 +81,7 @@ GlowneOkno::~GlowneOkno()
     
     delete automat_;
     delete manual_;
-    //delete okno_;
+    delete okno_;
     
 }
 
@@ -355,7 +355,8 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		temperaturaChwilowa_->clear();
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
-		//automat_->stop();
+		//if()
+			automat_->stop();
 		
 		if(konsola_)
 			std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
@@ -378,7 +379,8 @@ void GlowneOkno::zatrzymajGrzanie(void)
 	else
 	if(konsola_)
 		std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
-	//automat_->stop();
+	//if()
+		automat_->stop();
 }
 
 #include "GlowneOkno.moc"
