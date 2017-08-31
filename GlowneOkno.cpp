@@ -61,7 +61,7 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 GlowneOkno::~GlowneOkno()
 {
 	zadanaTemperatura_->setValue(0);
-	ustawTemperature();
+	ustawTemperature(false);
     rs232_->close();
     
     delete rs232_;
@@ -252,14 +252,14 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 	danePomiaroweWykresDlugookresowy_->setAxes(QwtPlot::xBottom, QwtPlot::yRight);
 }
 
-bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
+bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 {
 	QSerialPort::SerialPortError error;
 	bool stan=true;
 	do
 	{
 		error=rs232_->error();
-		if(error!=QSerialPort::NoError)
+		if((error!=QSerialPort::NoError)&&ask)
 		{
 			stan=obsluzBladRS(error);
 		}
@@ -268,7 +268,7 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
 			stan=false;
 		}
 	}
-	while(stan);
+	while(stan&&ask);
 	
 	if(error==QSerialPort::NoError)
 	{
@@ -278,14 +278,19 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz)
 	return BLAD_PORTU;
 }
 
-void GlowneOkno::ustawTemperature(void)
+void GlowneOkno::ustawTemperature(bool ask)
 {
 	char tmp[4];
 	int t=zadanaTemperatura_->value();
 	sprintf(tmp,"T%03i",t);
 	
-	if(wyslijRozkaz(tmp)==OK)
+	if(wyslijRozkaz(tmp,ask)==OK)
 		std::cerr<<tmp<<std::endl;
+	else
+	{
+		if(!ask)
+			QMessageBox(QMessageBox::Critical, "Błąd portu szeregowego!", "Błąd portu szeregowego w czasie wysyłania.", QMessageBox::Ok).exec();
+	}
 }
 
 void GlowneOkno::odbierzDane(void)
