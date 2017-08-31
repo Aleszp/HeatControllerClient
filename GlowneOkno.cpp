@@ -43,36 +43,28 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 	konsola_=false;
 	
 	setupRS();
-	
 	setupCzasTemperatura();
-	
 	setupOkno();
-    setupRozklad();
-    setupWyslij();
-    setupReset();
-    setupZatrzymajGrzanie();
-    wiersze_[2].addStretch();
-    setupTemperatura();
-    setupWykresChwilowy();
-    setupWykresDlugookresowy();  
+	setupRozklad();
+	setupWykresChwilowy();
+	setupWykresDlugookresowy();  
     
-    automat_=new TrybProgramowalny(this);
-    wiersze_[1].addWidget(automat_);
+	manual_=new TrybManualny(this);
+	wiersze_[1].addWidget(manual_);
     
-    okno_->show();
+	automat_=new TrybProgramowalny(this);
+	wiersze_[1].addWidget(automat_);
+    
+	okno_->show();
 }
     
 GlowneOkno::~GlowneOkno()
 {
-	zadanaTemperatura_->setValue(0);
+	manual_->setTemperatura(0);
 	ustawTemperature(false);
     rs232_->close();
-    
+   
     delete rs232_;
-    delete zadanaTemperatura_;
-    delete wyslij_;
-    delete reset_;
-    delete zatrzymajGrzanie_;
     
     delete danePomiaroweWykresChwilowy_;
     delete danePomiaroweWykresDlugookresowy_;
@@ -84,11 +76,13 @@ GlowneOkno::~GlowneOkno()
     delete czasDlugookresowy_;
     delete temperaturaDlugookresowa_;
     
-    delete automat_;
-    
     delete[] wiersze_;
     delete glownyRozmieszczacz_;
-    delete okno_; 
+    
+    delete automat_;
+    delete manual_;
+    //delete okno_;
+    
 }
 
 void GlowneOkno::setupOkno(void)
@@ -180,50 +174,6 @@ void GlowneOkno::setupCzasTemperatura(void)
 	temperaturaDlugookresowa_->reserve(65536);
 }
 
-void GlowneOkno::setupTemperatura(void)
-{
-	zadanaTemperatura_=new QSpinBox;
-	wiersze_[1].addWidget(zadanaTemperatura_);
-	zadanaTemperatura_->setFixedSize(150,30);
-    zadanaTemperatura_->setRange(0, 999);
-    zadanaTemperatura_->setSingleStep(1);
-    zadanaTemperatura_->setSuffix(" ℃");   
-}
-
-void GlowneOkno::setupWyslij(void)
-{
-	wyslij_=new QPushButton("Ustaw",this);
-	wyslij_->setFixedSize(150,30);
-	wiersze_[1].addWidget(wyslij_);
-	
-	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
-}
-
-void GlowneOkno::setupZatrzymajGrzanie(void)
-{
-	QPalette* czerwony = new QPalette();
-	czerwony->setColor(QPalette::ButtonText,Qt::red);
-	
-	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie",this);
-	zatrzymajGrzanie_->setFixedSize(150,30);
-	zatrzymajGrzanie_->setPalette(*czerwony);
-	
-	wiersze_[2].addWidget(zatrzymajGrzanie_);
-	
-	delete czerwony;
-	
-	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
-}
-
-void GlowneOkno::setupReset(void)
-{
-	reset_=new QPushButton("Reset",this);
-	reset_->setFixedSize(150,30);
-	wiersze_[2].addWidget(reset_);
-	
-	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
-}
-
 void GlowneOkno::setupWykresChwilowy(void)
 {
 	wykresChwilowy_=new QwtPlot(okno_);
@@ -285,6 +235,8 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 	if(error==QSerialPort::NoError)
 	{
 		rs232_->write(rozkaz);
+		if(konsola_)
+			std::cout<<rozkaz<<std::endl;
 		return OK;
 	}
 	return BLAD_PORTU;
@@ -293,7 +245,7 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 void GlowneOkno::ustawTemperature(bool ask)
 {
 	char tmp[4];
-	int t=zadanaTemperatura_->value();
+	int t=manual_->getTemperatura();
 	sprintf(tmp,"T%03i",t);
 	
 	if(wyslijRozkaz(tmp,ask)==OK)
@@ -403,7 +355,7 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		temperaturaChwilowa_->clear();
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
-		automat_->stop();
+		//automat_->stop();
 		
 		if(konsola_)
 			std::cout<<"Uruchomiono ponownie urządzenie."<<std::endl;
@@ -426,7 +378,7 @@ void GlowneOkno::zatrzymajGrzanie(void)
 	else
 	if(konsola_)
 		std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
-	automat_->stop();
+	//automat_->stop();
 }
 
 #include "GlowneOkno.moc"
