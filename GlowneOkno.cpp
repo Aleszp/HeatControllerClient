@@ -8,6 +8,9 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QWidget>
 
+//Nagłówki z katalogu QtGui
+#include <QtGui/QPalette>
+
 //Standardowe nagłówki C/C++
 #include <cstdlib>
 #include <iostream>
@@ -48,6 +51,7 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     setupWyslij();
     setupReset();
     setupZatrzymajGrzanie();
+    wiersze_[2].addStretch();
     setupTemperatura();
     setupWykresChwilowy();
     setupWykresDlugookresowy();  
@@ -179,7 +183,8 @@ void GlowneOkno::setupCzasTemperatura(void)
 void GlowneOkno::setupTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox;
-	wiersze_[0].addWidget(zadanaTemperatura_);
+	wiersze_[1].addWidget(zadanaTemperatura_);
+	zadanaTemperatura_->setFixedSize(150,30);
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
@@ -189,16 +194,23 @@ void GlowneOkno::setupWyslij(void)
 {
 	wyslij_=new QPushButton("Ustaw",this);
 	wyslij_->setFixedSize(150,30);
-	wiersze_[0].addWidget(wyslij_);
+	wiersze_[1].addWidget(wyslij_);
 	
 	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
 }
 
 void GlowneOkno::setupZatrzymajGrzanie(void)
 {
+	QPalette* czerwony = new QPalette();
+	czerwony->setColor(QPalette::ButtonText,Qt::red);
+	
 	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie",this);
 	zatrzymajGrzanie_->setFixedSize(150,30);
-	wiersze_[1].addWidget(zatrzymajGrzanie_);
+	zatrzymajGrzanie_->setPalette(*czerwony);
+	
+	wiersze_[2].addWidget(zatrzymajGrzanie_);
+	
+	delete czerwony;
 	
 	QObject::connect(zatrzymajGrzanie_, SIGNAL(clicked(bool)),this, SLOT(zatrzymajGrzanie()));
 }
@@ -207,7 +219,7 @@ void GlowneOkno::setupReset(void)
 {
 	reset_=new QPushButton("Reset",this);
 	reset_->setFixedSize(150,30);
-	wiersze_[1].addWidget(reset_);
+	wiersze_[2].addWidget(reset_);
 	
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
 }
@@ -215,7 +227,7 @@ void GlowneOkno::setupReset(void)
 void GlowneOkno::setupWykresChwilowy(void)
 {
 	wykresChwilowy_=new QwtPlot(okno_);
-	wiersze_[2].addWidget(wykresChwilowy_);
+	wiersze_[0].addWidget(wykresChwilowy_);
 	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
 	wykresChwilowy_->enableAxis(QwtPlot::yRight);
 	wykresChwilowy_->enableAxis(QwtPlot::yLeft, false);
@@ -235,7 +247,7 @@ void GlowneOkno::setupWykresChwilowy(void)
 void GlowneOkno::setupWykresDlugookresowy(void)
 {
 	wykresDlugookresowy_=new QwtPlot(okno_);
-	wiersze_[2].addWidget(wykresDlugookresowy_);
+	wiersze_[0].addWidget(wykresDlugookresowy_);
 	wykresDlugookresowy_->setTitle ("Temperatura próbki");
 	wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykresDlugookresowy_->enableAxis(QwtPlot::yRight);
