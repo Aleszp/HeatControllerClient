@@ -217,11 +217,14 @@ void GlowneOkno::setupWykresChwilowy(void)
 	wykresChwilowy_=new QwtPlot(okno_);
 	wiersze_[2].addWidget(wykresChwilowy_);
 	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
-	wykresChwilowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
-	wykresChwilowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	wykresChwilowy_->setCanvasBackground(QBrush (Qt::white));
+	wykresChwilowy_->enableAxis(QwtPlot::yRight);
+	wykresChwilowy_->enableAxis(QwtPlot::yLeft, false);
 	wykresChwilowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
-	wykresChwilowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
+	wykresChwilowy_->setAxisScale (QwtPlot::yRight, 0, 800);
+	wykresChwilowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykresChwilowy_->setAxisTitle (QwtPlot::yRight, "Temperatura /℃");
+	wykresChwilowy_->setCanvasBackground(QBrush (Qt::white));
+	
 	
 	danePomiaroweWykresChwilowy_=new QwtPlotCurve;
 	danePomiaroweWykresChwilowy_->setTitle("Temperatura");
@@ -234,11 +237,14 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 	wykresDlugookresowy_=new QwtPlot(okno_);
 	wiersze_[2].addWidget(wykresDlugookresowy_);
 	wykresDlugookresowy_->setTitle ("Temperatura próbki");
-	wykresDlugookresowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
-	wykresDlugookresowy_->setAxisTitle (QwtPlot::yLeft, "Temperatura /℃");
-	wykresDlugookresowy_->setCanvasBackground(QBrush (Qt::white));
 	wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
-	wykresDlugookresowy_->setAxisScale (QwtPlot::yLeft, 0, 800);
+	wykresDlugookresowy_->enableAxis(QwtPlot::yRight);
+	wykresDlugookresowy_->enableAxis(QwtPlot::yLeft, false);
+	wykresDlugookresowy_->setAxisScale (QwtPlot::yRight, 0, 800);
+	wykresDlugookresowy_->setAxisTitle (QwtPlot::xBottom, "Czas /s");
+	wykresDlugookresowy_->setAxisTitle (QwtPlot::yRight, "Temperatura /℃");
+	wykresDlugookresowy_->setCanvasBackground(QBrush (Qt::white));
+	
 	
 	danePomiaroweWykresDlugookresowy_=new QwtPlotCurve;
 	danePomiaroweWykresDlugookresowy_->setTitle("Temperatura");
