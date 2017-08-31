@@ -21,6 +21,7 @@
 
 //Nagłówki z katalogu programu
 #include "TrybProgramowalny.hpp"
+#include "TrybManualny.hpp"
 
 namespace Ui 
 {
@@ -39,13 +40,9 @@ class GlowneOkno : public QMainWindow
 		unsigned iloscWierszy_;
 		
 		TrybProgramowalny* automat_;
+		TrybManualny* manual_;
 		
 		QSerialPort *rs232_;
-
-		QSpinBox* zadanaTemperatura_;
-		QPushButton* wyslij_;
-		QPushButton* zatrzymajGrzanie_;
-		QPushButton* reset_;
 		
 		QVector <double>* czasChwilowy_;
 		QVector <double>* temperaturaChwilowa_;
@@ -61,11 +58,7 @@ class GlowneOkno : public QMainWindow
 		
 		void setupRS(void);
 		void setupOkno(void);
-		void setupCzasTemperatura(void);		
-		void setupTemperatura(void);
-		void setupWyslij(void);
-		void setupZatrzymajGrzanie(void);
-		void setupReset(void);
+		void setupCzasTemperatura(void);	
 		void setupWykresChwilowy(void);
 		void setupWykresDlugookresowy(void);
 		void setupRozklad(void);
@@ -75,7 +68,7 @@ class GlowneOkno : public QMainWindow
 		explicit GlowneOkno(QWidget* parent = nullptr);
 		~GlowneOkno();
 		bool wyslijRozkaz(const char* rozkaz, const bool ask=true);
-		inline void setZadanaTemperatura_(uint16_t wartosc){zadanaTemperatura_->setValue(wartosc);}	
+		inline void setZadanaTemperatura_(uint16_t wartosc){manual_->setTemperatura(wartosc);}	
 		inline bool getKonsola(void){return konsola_;}	
 		
 	public slots:

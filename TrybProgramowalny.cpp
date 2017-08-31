@@ -48,6 +48,7 @@ TrybProgramowalny::TrybProgramowalny(GlowneOkno* rodzic=0):QWidget((QMainWindow*
 
 TrybProgramowalny::~TrybProgramowalny()
 {
+	stop();
 	delete zegar_;
 	delete wczytaj_;
 	delete startStop_;
@@ -104,6 +105,7 @@ void TrybProgramowalny::obsluzMaszyneStanow(void)
 		if(rodzic_->wyslijRozkaz(tmp)==OK)	//Ustaw porządaną temperaturę
 		{
 			rodzic_->setZadanaTemperatura_(program_->first().wartosc);
+			rodzic_->ustawTemperature();
 			std::cerr<<tmp<<std::endl;
 			wyswietlTekst("Ustawiono temperaturę docelową.",true,rodzic_->getKonsola());
 		}
