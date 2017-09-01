@@ -26,19 +26,19 @@ TrybProgramowalny::TrybProgramowalny(GlowneOkno* rodzic=0):QWidget((QMainWindow*
 	rozmieszczacz_->addLayout(&(rozmieszczaczeWierszowe_[0]));
 	rozmieszczacz_->addLayout(&(rozmieszczaczeWierszowe_[1]));
 	
-	rozmieszczaczeWierszowe_[0].addStretch();
 	czasWskaznik_=new QLabel("Można wczytać program użytkownika.",this);
 	rozmieszczaczeWierszowe_[0].addWidget(czasWskaznik_);
-	
-	rozmieszczaczeWierszowe_[1].addStretch();
+	rozmieszczaczeWierszowe_[0].addStretch();
+
 	wczytaj_=new QPushButton("Wczytaj",this);
 	rozmieszczaczeWierszowe_[1].addWidget(wczytaj_);
 	wczytaj_->setFixedSize(150,30);
 	startStop_=new QPushButton("Start",this);
 	rozmieszczaczeWierszowe_[1].addWidget(startStop_);
 	startStop_->setFixedSize(150,30);
-	program_=new QVector <Rozkaz>;
+	rozmieszczaczeWierszowe_[1].addStretch();
 	
+	program_=new QVector <Rozkaz>;
 	zegar_=new QTimer(this);
 	
 	QObject::connect(wczytaj_, SIGNAL(clicked(bool)),this, SLOT(wczytajProgram()));

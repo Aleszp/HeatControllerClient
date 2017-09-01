@@ -19,8 +19,8 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	setupTemperatura();
     wiersze_[0].addStretch();
     
-    setupReset();
     setupZatrzymajGrzanie();
+    setupReset();
     setupMoc();
 	wiersze_[1].addStretch();
     

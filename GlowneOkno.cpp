@@ -89,7 +89,7 @@ GlowneOkno::~GlowneOkno()
 void GlowneOkno::setupOkno(void)
 {
 	okno_=new QWidget();
-	okno_->resize(800,600);
+	okno_->resize(1024,768);
 	okno_->setWindowTitle("Kontroler temperatury");
 }
 
