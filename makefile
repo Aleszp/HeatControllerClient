@@ -8,13 +8,13 @@ QTFLAGS= -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5
 LIBS= -lQt5Core -lQt5Gui -lQt5Widgets -lqwt-qt5 -lQt5SerialPort
 
 #Konsolidacja programu
-klient:	main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o TrybManualny.o
-		$(CXX) -o klient main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o TrybManualny.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
+klient:	main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o TrybManualny.o WartosciStale.o
+		$(CXX) -o klient main.o GlowneOkno.o WyborPortu.o TrybProgramowalny.o TrybManualny.o WartosciStale.o $(LIBS) $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja wykonywalnej części pprogramu
 main.o:	main.cpp
 		$(CXX) -o main.o -c main.cpp $(CXXFLAGS) $(QTFLAGS)
 #Kompilacja implementacji głównej klasy programu
-GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp TypyWyliczeniowe.hpp TrybProgramowalny.hpp TrybManualny.hpp
+GlowneOkno.o:	GlowneOkno.cpp GlowneOkno.moc GlowneOkno.hpp TypyWyliczeniowe.hpp TrybProgramowalny.hpp TrybManualny.hpp WartosciStale.hpp
 		$(CXX) -o GlowneOkno.o -c GlowneOkno.cpp $(CXXFLAGS) $(QTFLAGS)
 #Przygotowanie pliku typu .moc dla głównej klasy programu (wymóg prawidłowego działania biblioteki Qt)
 GlowneOkno.moc:	GlowneOkno.hpp
@@ -36,6 +36,10 @@ TrybProgramowalny.o: TrybProgramowalny.cpp TrybProgramowalny.hpp TrybProgramowal
 #Przygotowanie pliku typu .moc dla klasu trybu programowalnego (wymóg prawidłowego działania biblioteki Qt)
 TrybProgramowalny.moc:	TrybProgramowalny.hpp
 		moc TrybProgramowalny.hpp > TrybProgramowalny.moc	
+		
+#Kompilacja implementacji wartości stałych
+WartosciStale.o: WartosciStale.cpp WartosciStale.hpp
+		$(CXX) -o WartosciStale.o -c WartosciStale.cpp $(CXXFLAGS) $(QTFLAGS)
 		
 #Usunięcie efektów kompilacji		
 clean:

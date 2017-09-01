@@ -19,6 +19,7 @@
 #include "GlowneOkno.hpp"
 #include "WyborPortu.hpp"
 #include "TypyWyliczeniowe.hpp"
+#include "WartosciStale.hpp"
 
 const char* bledy[14]=
 {
@@ -276,7 +277,7 @@ void GlowneOkno::odbierzDane(void)
 		std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
 		
 		manual_->setTemperatua(tmpTemperatura);
-		manual_->setMoc((tmpMoc*450)/255);
+		manual_->setMoc((tmpMoc*mocGrzalki)/255);
 		
 		czasChwilowy_->push_back((double)tmpCzas);
 		temperaturaChwilowa_->push_back((double)tmpTemperatura);
