@@ -54,13 +54,14 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     
 	automat_=new TrybProgramowalny(this);
 	wiersze_[1].addWidget(automat_);
+	wiersze_[1].addStretch();
     
 	okno_->show();
 }
     
 GlowneOkno::~GlowneOkno()
 {
-	manual_->setTemperatura(0);
+	manual_->setTemperaturaDocelowa(0);
 	ustawTemperature(false);
     rs232_->close();
    
@@ -245,7 +246,7 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 void GlowneOkno::ustawTemperature(bool ask)
 {
 	char tmp[4];
-	int t=manual_->getTemperatura();
+	int t=manual_->getTemperaturaDocelowa();
 	sprintf(tmp,"T%03i",t);
 	
 	if(wyslijRozkaz(tmp,ask)==OK)
@@ -261,16 +262,21 @@ void GlowneOkno::odbierzDane(void)
 {
 	char tmpTekst[1024];
 	char tmp[256];
+	
 	uint32_t tmpCzas=0;
 	uint32_t tmpTemperatura=0;
+	uint32_t tmpMoc;
 	
 	rs232_->readLine(tmpTekst,1023);
 	rs232_->clear();
 	
 	if((tmpTekst[10]==',')&&(tmpTekst[17]==','))
 	{
-		sscanf(tmpTekst,"%u,%u,%s",&(tmpCzas),&(tmpTemperatura),tmp);
+		sscanf(tmpTekst,"%u,%u,%u %s",&(tmpCzas),&(tmpTemperatura),&(tmpMoc),tmp);
 		std::cout<<tmpCzas<<" "<<tmpTemperatura<<std::endl;
+		
+		manual_->setTemperatua(tmpTemperatura);
+		manual_->setMoc((tmpMoc*450)/255);
 		
 		czasChwilowy_->push_back((double)tmpCzas);
 		temperaturaChwilowa_->push_back((double)tmpTemperatura);
@@ -347,7 +353,7 @@ bool GlowneOkno::obsluzBladRS(QSerialPort::SerialPortError kod_bledu)
 	return false;
 }
 
-void GlowneOkno::zrestartujUrzadenie(void)
+void GlowneOkno::zrestartujUrzadenie(bool manual)
 {
 	if(wyslijRozkaz("R")==OK)
 	{
@@ -355,7 +361,7 @@ void GlowneOkno::zrestartujUrzadenie(void)
 		temperaturaChwilowa_->clear();
 		czasDlugookresowy_->clear();
 		temperaturaDlugookresowa_->clear();
-		//if()
+		if(manual)
 			automat_->stop();
 		
 		if(konsola_)
@@ -367,7 +373,7 @@ void GlowneOkno::zrestartujUrzadenie(void)
 	}
 }
 
-void GlowneOkno::zatrzymajGrzanie(void)
+void GlowneOkno::zatrzymajGrzanie(bool manual)
 {
 	if(!wyslijRozkaz("T000")==OK)
 	{
@@ -379,7 +385,7 @@ void GlowneOkno::zatrzymajGrzanie(void)
 	else
 	if(konsola_)
 		std::cout<<"Zatrzymano grzanie (Ustawiono T=0)."<<std::endl;
-	//if()
+	if(manual)
 		automat_->stop();
 }
 

@@ -15,11 +15,13 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	rozmieszczacz_->addLayout(&wiersze_[1]);
 	
 	setupWyslij();
+	setupZadanaTemperatura();
 	setupTemperatura();
     wiersze_[0].addStretch();
     
     setupReset();
     setupZatrzymajGrzanie();
+    setupMoc();
 	wiersze_[1].addStretch();
     
 }
@@ -27,6 +29,8 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 TrybManualny::~TrybManualny()
 {
 	rodzic_=nullptr;
+	delete temperatura_;
+	delete moc_;
 	delete zadanaTemperatura_;
     delete wyslij_;
     delete reset_;
@@ -35,7 +39,7 @@ TrybManualny::~TrybManualny()
     delete rozmieszczacz_;
 }
 
-void TrybManualny::setupTemperatura(void)
+void TrybManualny::setupZadanaTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox;
 	wiersze_[0].addWidget(zadanaTemperatura_);
@@ -79,9 +83,35 @@ void TrybManualny::setupReset(void)
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
 }
 
+void TrybManualny::setupTemperatura(void)
+{
+	temperatura_=new QLabel("Bieżąca temperatura: ???℃");
+	wiersze_[0].addWidget(temperatura_);
+}
+
+void TrybManualny::setupMoc(void)
+{
+	moc_=new QLabel("Bieżąca moc: ???W");
+	wiersze_[1].addWidget(moc_);
+}
+
+void TrybManualny::setMoc(uint32_t moc)
+{
+	char tmp[32];
+	sprintf(tmp,"Bieżąca moc: %03huW",moc);
+	moc_->setText(tmp);
+}
+
+void TrybManualny::setTemperatua(uint32_t temperatura)
+{
+	char tmp[32];
+	sprintf(tmp,"Bieżąca temperatura: %03hu℃",temperatura);
+	temperatura_->setText(tmp);
+}
+
 void TrybManualny::zrestartujUrzadenie(void)
 {
-	rodzic_->zrestartujUrzadenie();
+	rodzic_->zrestartujUrzadenie(true);
 }
 
 void TrybManualny::ustawTemperature(bool ask)
@@ -91,7 +121,7 @@ void TrybManualny::ustawTemperature(bool ask)
 
 void TrybManualny::zatrzymajGrzanie(void)
 {
-	rodzic_->zatrzymajGrzanie();
+	rodzic_->zatrzymajGrzanie(true);
 }
 
 

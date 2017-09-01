@@ -68,14 +68,14 @@ class GlowneOkno : public QMainWindow
 		explicit GlowneOkno(QWidget* parent = nullptr);
 		~GlowneOkno();
 		bool wyslijRozkaz(const char* rozkaz, const bool ask=true);
-		inline void setZadanaTemperatura_(uint16_t wartosc){manual_->setTemperatura(wartosc);}	
+		inline void setZadanaTemperatura_(uint16_t wartosc){manual_->setTemperaturaDocelowa(wartosc);}	
 		inline bool getKonsola(void){return konsola_;}	
 		
 	public slots:
 		void ustawTemperature(bool ask=true);
-		void zatrzymajGrzanie(void);
+		void zatrzymajGrzanie(bool maunal=false);
 		void odbierzDane(void);
-		void zrestartujUrzadenie(void);
+		void zrestartujUrzadenie(bool manual=false);
 };
 
 #endif

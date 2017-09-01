@@ -36,17 +36,24 @@ class TrybManualny : public QWidget
 		QPushButton* wyslij_;
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
+		QLabel* temperatura_;
+		QLabel* moc_;
 		
-		void setupTemperatura(void);
+		void setupZadanaTemperatura(void);
 		void setupWyslij(void);
 		void setupZatrzymajGrzanie(void);
 		void setupReset(void);
 		
+		void setupTemperatura(void);
+		void setupMoc(void);
+		
 	public:
 		TrybManualny(GlowneOkno* parent);
 		~TrybManualny();
-		inline int getTemperatura(void){return zadanaTemperatura_->value();}
-		inline void setTemperatura(uint16_t temperatura){zadanaTemperatura_->setValue(temperatura);}
+		inline int getTemperaturaDocelowa(void){return zadanaTemperatura_->value();}
+		inline void setTemperaturaDocelowa(uint16_t temperatura){zadanaTemperatura_->setValue(temperatura);}
+		void setMoc(uint32_t moc);
+		void setTemperatua(uint32_t temperatura);
 		
 	public slots:
 		void zrestartujUrzadenie(void);
