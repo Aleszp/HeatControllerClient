@@ -52,10 +52,10 @@ GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
     
 	manual_=new TrybManualny(this);
 	wiersze_[1].addWidget(manual_);
+	wiersze_[1].addStretch();
     
 	automat_=new TrybProgramowalny(this);
 	wiersze_[1].addWidget(automat_);
-	wiersze_[1].addStretch();
     
 	okno_->show();
 }

@@ -1,3 +1,7 @@
+//Nagłówki z katalogu QtWidgets
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
+
 //Standardowe nagłówki C/C++
 #include <iostream>
 
@@ -15,22 +19,24 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	nazwaPliku_=new char[256];
 	
 	rozmieszczacz_=new QVBoxLayout(this);
-	wiersze_=new QHBoxLayout[2];
+	wiersze_=new QHBoxLayout[3];
 	rozmieszczacz_->addLayout(&wiersze_[0]);
 	rozmieszczacz_->addLayout(&wiersze_[1]);
+	rozmieszczacz_->addLayout(&wiersze_[2]);
 	
 	setupWyslij();
 	setupZadanaTemperatura();
-	setupZapisDoPliku();
 	setupTemperatura();
     wiersze_[0].addStretch();
     
     setupZatrzymajGrzanie();
     setupReset();
-    setupWybierzPlik();
     setupMoc();
 	wiersze_[1].addStretch();
     
+    setupWybierzPlik();
+    setupZapisDoPliku();
+    wiersze_[2].addStretch();
 }
 
 TrybManualny::~TrybManualny()
@@ -109,7 +115,7 @@ void TrybManualny::setupWybierzPlik(void)
 {
 	wybierzPlik_=new QPushButton("Wybierz plik",this);
 	wybierzPlik_->setFixedSize(150,30);
-	wiersze_[1].addWidget(wybierzPlik_);
+	wiersze_[2].addWidget(wybierzPlik_);
 	
 	QObject::connect(wybierzPlik_, SIGNAL(clicked(bool)),this, SLOT(wybierzPlik()));
 }
@@ -118,7 +124,9 @@ void TrybManualny::setupZapisDoPliku(void)
 {
 	zapisDoPliku_=new QCheckBox("Zapis do pliku",this);
 	zapisDoPliku_->setFixedSize(150,30);
-	wiersze_[0].addWidget(zapisDoPliku_);
+	zapisDoPliku_->setChecked(false);
+	zapisDoPliku_->setEnabled(false);
+	wiersze_[2].addWidget(zapisDoPliku_);
 	
 	QObject::connect(zapisDoPliku_, SIGNAL(clicked(bool)),this, SLOT(zapisujDoPliku(bool)));
 }
@@ -154,9 +162,12 @@ int TrybManualny::zamknijPlik(void)
 {
 	if(otwartyPlik_)
 	{
+		zapisujDoPliku_=false;
 		fflush(plikDoZapisu_);
 		fclose(plikDoZapisu_);
 		otwartyPlik_=false;
+		zapisDoPliku_->setChecked(false);
+		zapisDoPliku_->setEnabled(false);
 		return ZAMKNIETO_PLIK;
 	}
 	return NIE_ZAMKNIETO_PLIKU;
@@ -179,7 +190,32 @@ void TrybManualny::zatrzymajGrzanie(void)
 
 void TrybManualny::wybierzPlik(void)
 {
-	//do zrobienia
+	zamknijPlik();
+	if(wskazPlik())
+	{
+		return;
+	}
+	if(otworzPlik()==BLAD_OTWARCIA_PLIKU)
+	{
+		QMessageBox::warning(this, tr("Błąd otwarcia pliku!"),"Nie można otworzyć pliku.");
+		return;
+	}
+	zapisDoPliku_->setChecked(false);
+	zapisDoPliku_->setEnabled(true);
+}
+
+int TrybManualny::wskazPlik(void)
+{
+	QString nazwaPlikuTmp = QFileDialog::getOpenFileName(this,tr("Wybierz plik do zapisu"), "",tr("Dane rozdzielone przecinkami (*.csv);;Wszystkie pliki (*)"));
+    
+    if (nazwaPlikuTmp.isEmpty())
+    {
+		QMessageBox::warning(this, tr("Brak nazwy pliku!"),"Nie podano nazwy pliku do zapisu.");
+        return BRAK_NAZWY_PLIKU;
+	}
+    
+    strncpy(nazwaPliku_,nazwaPlikuTmp.toLocal8Bit().data(),255);
+    return OK;
 }
 
 void TrybManualny::zapisujDoPliku(bool stan)

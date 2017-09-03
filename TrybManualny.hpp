@@ -67,6 +67,7 @@ class TrybManualny : public QWidget
 		inline FILE* getPlikWyjsciowy(void){return plikDoZapisu_;}
 		int otworzPlik(void);
 		int zamknijPlik(void);
+		int wskazPlik(void);
 		void setMoc(uint32_t moc);
 		void setTemperatua(uint32_t temperatura);
 		
