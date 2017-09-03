@@ -9,6 +9,11 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 {
 	rodzic_=rodzic;
 	
+	otwartyPlik_=false;
+	zapisujDoPliku_=false;
+	
+	nazwaPliku_=new char[256];
+	
 	rozmieszczacz_=new QVBoxLayout(this);
 	wiersze_=new QHBoxLayout[2];
 	rozmieszczacz_->addLayout(&wiersze_[0]);
@@ -16,11 +21,13 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	
 	setupWyslij();
 	setupZadanaTemperatura();
+	setupZapisDoPliku();
 	setupTemperatura();
     wiersze_[0].addStretch();
     
     setupZatrzymajGrzanie();
     setupReset();
+    setupWybierzPlik();
     setupMoc();
 	wiersze_[1].addStretch();
     
@@ -34,7 +41,10 @@ TrybManualny::~TrybManualny()
 	delete zadanaTemperatura_;
     delete wyslij_;
     delete reset_;
+    delete wybierzPlik_;
+    delete zapisDoPliku_;
     delete zatrzymajGrzanie_;
+    delete[] nazwaPliku_;
     delete[] wiersze_;
     delete rozmieszczacz_;
 }
@@ -95,6 +105,24 @@ void TrybManualny::setupMoc(void)
 	wiersze_[1].addWidget(moc_);
 }
 
+void TrybManualny::setupWybierzPlik(void)
+{
+	wybierzPlik_=new QPushButton("Wybierz plik",this);
+	wybierzPlik_->setFixedSize(150,30);
+	wiersze_[1].addWidget(wybierzPlik_);
+	
+	QObject::connect(wybierzPlik_, SIGNAL(clicked(bool)),this, SLOT(wybierzPlik()));
+}
+
+void TrybManualny::setupZapisDoPliku(void)
+{
+	zapisDoPliku_=new QCheckBox("Zapis do pliku",this);
+	zapisDoPliku_->setFixedSize(150,30);
+	wiersze_[0].addWidget(zapisDoPliku_);
+	
+	QObject::connect(zapisDoPliku_, SIGNAL(clicked(bool)),this, SLOT(zapisujDoPliku(bool)));
+}
+
 void TrybManualny::setMoc(uint32_t moc)
 {
 	char tmp[32];
@@ -107,6 +135,31 @@ void TrybManualny::setTemperatua(uint32_t temperatura)
 	char tmp[32];
 	sprintf(tmp,"Bieżąca temperatura: %03hu℃",temperatura);
 	temperatura_->setText(tmp);
+}
+
+int TrybManualny::otworzPlik(void)
+{
+	if(otwartyPlik_)
+		return zamknijPlik();;	
+	
+	plikDoZapisu_=fopen(nazwaPliku_,"a");
+	
+	if(!plikDoZapisu_)
+		return BLAD_OTWARCIA_PLIKU;
+	otwartyPlik_=true;
+	return OTWARTO_PLIK;
+}
+
+int TrybManualny::zamknijPlik(void)
+{
+	if(otwartyPlik_)
+	{
+		fflush(plikDoZapisu_);
+		fclose(plikDoZapisu_);
+		otwartyPlik_=false;
+		return ZAMKNIETO_PLIK;
+	}
+	return NIE_ZAMKNIETO_PLIKU;
 }
 
 void TrybManualny::zrestartujUrzadenie(void)
@@ -124,5 +177,14 @@ void TrybManualny::zatrzymajGrzanie(void)
 	rodzic_->zatrzymajGrzanie(true);
 }
 
+void TrybManualny::wybierzPlik(void)
+{
+	//do zrobienia
+}
+
+void TrybManualny::zapisujDoPliku(bool stan)
+{
+	zapisujDoPliku_=stan;
+}
 
 #include "TrybManualny.moc"

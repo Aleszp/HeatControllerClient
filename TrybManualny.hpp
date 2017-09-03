@@ -11,6 +11,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QCheckBox>
 
 //Standardowe nagłówki C/C++
 #include <cstdint>
@@ -36,6 +37,13 @@ class TrybManualny : public QWidget
 		QPushButton* wyslij_;
 		QPushButton* zatrzymajGrzanie_;
 		QPushButton* reset_;
+		QPushButton* wybierzPlik_;
+		QCheckBox* zapisDoPliku_;
+		FILE* plikDoZapisu_;
+		bool otwartyPlik_;
+		bool zapisujDoPliku_;
+		char* nazwaPliku_;
+		
 		QLabel* temperatura_;
 		QLabel* moc_;
 		
@@ -43,6 +51,8 @@ class TrybManualny : public QWidget
 		void setupWyslij(void);
 		void setupZatrzymajGrzanie(void);
 		void setupReset(void);
+		void setupWybierzPlik(void);
+		void setupZapisDoPliku(void);
 		
 		void setupTemperatura(void);
 		void setupMoc(void);
@@ -52,14 +62,21 @@ class TrybManualny : public QWidget
 		~TrybManualny();
 		inline int getTemperaturaDocelowa(void){return zadanaTemperatura_->value();}
 		inline void setTemperaturaDocelowa(uint16_t temperatura){zadanaTemperatura_->setValue(temperatura);}
+		inline bool getZapisDoPliku(void){return zapisDoPliku_->QAbstractButton::isChecked();}
+		inline bool getOtwartyPlik(void){return otwartyPlik_;}
+		inline FILE* getPlikWyjsciowy(void){return plikDoZapisu_;}
+		int otworzPlik(void);
+		int zamknijPlik(void);
 		void setMoc(uint32_t moc);
 		void setTemperatua(uint32_t temperatura);
+		
 		
 	public slots:
 		void zrestartujUrzadenie(void);
 		void ustawTemperature(bool ask=true);
 		void zatrzymajGrzanie(void);
-		
+		void wybierzPlik(void);
+		void zapisujDoPliku(bool stan);
 };
 
 #endif

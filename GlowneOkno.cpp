@@ -271,6 +271,11 @@ void GlowneOkno::odbierzDane(void)
 	rs232_->readLine(tmpTekst,1023);
 	rs232_->clear();
 	
+	if(manual_->getZapisDoPliku()&&manual_->getOtwartyPlik())
+	{
+		fprintf(manual_->getPlikWyjsciowy(),"%s",tmpTekst);
+	}
+	
 	if((tmpTekst[10]==',')&&(tmpTekst[17]==','))
 	{
 		sscanf(tmpTekst,"%u,%u,%u %s",&(tmpCzas),&(tmpTemperatura),&(tmpMoc),tmp);
