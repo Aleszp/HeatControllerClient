@@ -39,4 +39,4 @@ klient
 
 #pliki wyjściowe programu
 *.csv
-*.loh
+*.log
