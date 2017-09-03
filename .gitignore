@@ -36,3 +36,7 @@
 
 #plik wykonywalny
 klient
+
+#pliki wyjściowe programu
+*.csv
+*.loh
