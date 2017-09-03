@@ -4,6 +4,7 @@
 
 //Standardowe nagłówki C/C++
 #include <iostream>
+#include <ctime>
 
 //Nagłówki z katalogu programu
 #include "TrybManualny.hpp"
@@ -24,8 +25,8 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	rozmieszczacz_->addLayout(&wiersze_[1]);
 	rozmieszczacz_->addLayout(&wiersze_[2]);
 	
-	setupWyslij();
 	setupZadanaTemperatura();
+	setupWyslij();
 	setupTemperatura();
     wiersze_[0].addStretch();
     
@@ -42,6 +43,7 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 TrybManualny::~TrybManualny()
 {
 	rodzic_=nullptr;
+	zamknijPlik();
 	delete temperatura_;
 	delete moc_;
 	delete zadanaTemperatura_;
@@ -146,15 +148,26 @@ void TrybManualny::setTemperatua(uint32_t temperatura)
 }
 
 int TrybManualny::otworzPlik(void)
-{
+{	
 	if(otwartyPlik_)
 		return zamknijPlik();;	
 	
+	time_t czas;
+	struct tm* czas2;
+	char data[128];
+	
+	time(&czas);
+	czas2=localtime(&czas);
+
+	strftime(data,sizeof(data),"%d-%m-%y,%H:%M:%S",czas2);
+
 	plikDoZapisu_=fopen(nazwaPliku_,"a");
 	
 	if(!plikDoZapisu_)
 		return BLAD_OTWARCIA_PLIKU;
 	otwartyPlik_=true;
+	fprintf(plikDoZapisu_,"Pomiar,%s\n",data);
+	fprintf(plikDoZapisu_,"t \\s,T \\℃, P [0-255]\n");
 	return OTWARTO_PLIK;
 }
 
@@ -164,6 +177,7 @@ int TrybManualny::zamknijPlik(void)
 	{
 		zapisujDoPliku_=false;
 		fflush(plikDoZapisu_);
+		fprintf(plikDoZapisu_,"\n");
 		fclose(plikDoZapisu_);
 		otwartyPlik_=false;
 		zapisDoPliku_->setChecked(false);

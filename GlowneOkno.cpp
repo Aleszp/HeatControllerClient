@@ -90,7 +90,7 @@ GlowneOkno::~GlowneOkno()
 void GlowneOkno::setupOkno(void)
 {
 	okno_=new QWidget();
-	okno_->resize(1024,768);
+	okno_->resize(1280,1024);
 	okno_->setWindowTitle("Kontroler temperatury");
 }
 
@@ -180,7 +180,7 @@ void GlowneOkno::setupWykresChwilowy(void)
 {
 	wykresChwilowy_=new QwtPlot(okno_);
 	wiersze_[0].addWidget(wykresChwilowy_);
-	wykresChwilowy_->setTitle ("Bieżąca temperatura próbki");
+	wykresChwilowy_->setTitle ("Temperatura próbki (pomiar krótkookresowy)");
 	wykresChwilowy_->enableAxis(QwtPlot::yRight);
 	wykresChwilowy_->enableAxis(QwtPlot::yLeft, false);
 	wykresChwilowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
@@ -200,7 +200,7 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 {
 	wykresDlugookresowy_=new QwtPlot(okno_);
 	wiersze_[0].addWidget(wykresDlugookresowy_);
-	wykresDlugookresowy_->setTitle ("Temperatura próbki");
+	wykresDlugookresowy_->setTitle ("Temperatura próbki (pomiar długookresowy)");
 	wykresDlugookresowy_->setAxisScale (QwtPlot::xBottom, 0, 120);
 	wykresDlugookresowy_->enableAxis(QwtPlot::yRight);
 	wykresDlugookresowy_->enableAxis(QwtPlot::yLeft, false);
