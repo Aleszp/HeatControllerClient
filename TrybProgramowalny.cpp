@@ -27,15 +27,15 @@ TrybProgramowalny::TrybProgramowalny(GlowneOkno* rodzic=0):QWidget((QMainWindow*
 	rozmieszczacz_->addLayout(&(rozmieszczaczeWierszowe_[1]));
 	
 	czasWskaznik_=new QLabel("Można wczytać program użytkownika.",this);
-	czasWskaznik_->setFixedSize(300,60);
+	czasWskaznik_->setFixedSize(300,90);
 	rozmieszczaczeWierszowe_[0].addWidget(czasWskaznik_);
 
 	wczytaj_=new QPushButton("Wczytaj",this);
 	rozmieszczaczeWierszowe_[1].addWidget(wczytaj_);
-	wczytaj_->setFixedSize(150,30);
+	wczytaj_->setFixedSize(180,30);
 	startStop_=new QPushButton("Start",this);
 	rozmieszczaczeWierszowe_[1].addWidget(startStop_);
-	startStop_->setFixedSize(150,30);
+	startStop_->setFixedSize(180,30);
 	
 	program_=new QVector <Rozkaz>;
 	zegar_=new QTimer(this);

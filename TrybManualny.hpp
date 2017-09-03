@@ -12,6 +12,7 @@
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QLineEdit>
 
 //Standardowe nagłówki C/C++
 #include <cstdint>
@@ -39,6 +40,9 @@ class TrybManualny : public QWidget
 		QPushButton* reset_;
 		QPushButton* wybierzPlik_;
 		QCheckBox* zapisDoPliku_;
+		QLineEdit* komenda_;
+		QPushButton* wyslijRozkaz_;
+		
 		FILE* plikDoZapisu_;
 		bool otwartyPlik_;
 		bool zapisujDoPliku_;
@@ -53,6 +57,8 @@ class TrybManualny : public QWidget
 		void setupReset(void);
 		void setupWybierzPlik(void);
 		void setupZapisDoPliku(void);
+		void setupKomenda(void);
+		void setupWyslijRozkaz(void);
 		
 		void setupTemperatura(void);
 		void setupMoc(void);
@@ -74,10 +80,11 @@ class TrybManualny : public QWidget
 		
 	public slots:
 		void zrestartujUrzadenie(void);
-		void ustawTemperature(bool ask=true);
+		void ustawTemperature(const bool ask=true);
+		void wyslijRozkaz(const bool ask=true);
 		void zatrzymajGrzanie(void);
 		void wybierzPlik(void);
-		void zapisujDoPliku(bool stan);
+		void zapisujDoPliku(const bool stan);
 };
 
 #endif

@@ -41,7 +41,7 @@ const char* bledy[14]=
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
-	konsola_=false;
+	konsola_=true;
 	
 	setupRS();
 	setupCzasTemperatura();

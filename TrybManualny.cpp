@@ -20,10 +20,11 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
 	nazwaPliku_=new char[256];
 	
 	rozmieszczacz_=new QVBoxLayout(this);
-	wiersze_=new QHBoxLayout[3];
+	wiersze_=new QHBoxLayout[4];
 	rozmieszczacz_->addLayout(&wiersze_[0]);
 	rozmieszczacz_->addLayout(&wiersze_[1]);
 	rozmieszczacz_->addLayout(&wiersze_[2]);
+	rozmieszczacz_->addLayout(&wiersze_[3]);
 	
 	setupZadanaTemperatura();
 	setupWyslij();
@@ -38,6 +39,10 @@ TrybManualny::TrybManualny(GlowneOkno* rodzic=0):QWidget((QMainWindow*)rodzic)
     setupWybierzPlik();
     setupZapisDoPliku();
     wiersze_[2].addStretch();
+    
+    setupKomenda();
+    setupWyslijRozkaz();
+    wiersze_[3].addStretch();
 }
 
 TrybManualny::~TrybManualny()
@@ -52,6 +57,8 @@ TrybManualny::~TrybManualny()
     delete wybierzPlik_;
     delete zapisDoPliku_;
     delete zatrzymajGrzanie_;
+    delete wyslijRozkaz_;
+    delete komenda_;
     delete[] nazwaPliku_;
     delete[] wiersze_;
     delete rozmieszczacz_;
@@ -61,7 +68,7 @@ void TrybManualny::setupZadanaTemperatura(void)
 {
 	zadanaTemperatura_=new QSpinBox;
 	wiersze_[0].addWidget(zadanaTemperatura_);
-	zadanaTemperatura_->setFixedSize(150,30);
+	zadanaTemperatura_->setFixedSize(180,30);
     zadanaTemperatura_->setRange(0, 999);
     zadanaTemperatura_->setSingleStep(1);
     zadanaTemperatura_->setSuffix(" ℃");   
@@ -70,7 +77,7 @@ void TrybManualny::setupZadanaTemperatura(void)
 void TrybManualny::setupWyslij(void)
 {
 	wyslij_=new QPushButton("Ustaw",this);
-	wyslij_->setFixedSize(150,30);
+	wyslij_->setFixedSize(180,30);
 	wiersze_[0].addWidget(wyslij_);
 	
 	QObject::connect(wyslij_, SIGNAL(clicked(bool)),this, SLOT(ustawTemperature()));
@@ -82,7 +89,7 @@ void TrybManualny::setupZatrzymajGrzanie(void)
 	czerwony->setColor(QPalette::ButtonText,Qt::red);
 	
 	zatrzymajGrzanie_=new QPushButton("Zatrzymaj grzanie",this);
-	zatrzymajGrzanie_->setFixedSize(150,30);
+	zatrzymajGrzanie_->setFixedSize(180,30);
 	zatrzymajGrzanie_->setPalette(*czerwony);
 	
 	wiersze_[1].addWidget(zatrzymajGrzanie_);
@@ -95,7 +102,7 @@ void TrybManualny::setupZatrzymajGrzanie(void)
 void TrybManualny::setupReset(void)
 {
 	reset_=new QPushButton("Reset",this);
-	reset_->setFixedSize(150,30);
+	reset_->setFixedSize(180,30);
 	wiersze_[1].addWidget(reset_);
 	
 	QObject::connect(reset_, SIGNAL(clicked(bool)),this, SLOT(zrestartujUrzadenie()));
@@ -116,7 +123,7 @@ void TrybManualny::setupMoc(void)
 void TrybManualny::setupWybierzPlik(void)
 {
 	wybierzPlik_=new QPushButton("Wybierz plik",this);
-	wybierzPlik_->setFixedSize(150,30);
+	wybierzPlik_->setFixedSize(180,30);
 	wiersze_[2].addWidget(wybierzPlik_);
 	
 	QObject::connect(wybierzPlik_, SIGNAL(clicked(bool)),this, SLOT(wybierzPlik()));
@@ -125,12 +132,32 @@ void TrybManualny::setupWybierzPlik(void)
 void TrybManualny::setupZapisDoPliku(void)
 {
 	zapisDoPliku_=new QCheckBox("Zapis do pliku",this);
-	zapisDoPliku_->setFixedSize(150,30);
+	zapisDoPliku_->setFixedSize(180,30);
 	zapisDoPliku_->setChecked(false);
 	zapisDoPliku_->setEnabled(false);
 	wiersze_[2].addWidget(zapisDoPliku_);
 	
 	QObject::connect(zapisDoPliku_, SIGNAL(clicked(bool)),this, SLOT(zapisujDoPliku(bool)));
+}
+
+void TrybManualny::setupWyslijRozkaz(void)
+{
+	wyslijRozkaz_=new QPushButton("Wyślij rozkaz",this);
+	wyslijRozkaz_->setFixedSize(180,30);
+	wiersze_[3].addWidget(wyslijRozkaz_);
+	
+	QObject::connect(wyslijRozkaz_, SIGNAL(clicked(bool)),this, SLOT(wyslijRozkaz()));
+}
+
+void TrybManualny::setupKomenda(void)
+{
+	komenda_=new QLineEdit(this);
+	komenda_->setFixedSize(180,30);
+	komenda_->setMaxLength(32);
+	wiersze_[3].addWidget(komenda_);
+	komenda_->setPlaceholderText("Wprowadź rozkaz");
+	
+	QObject::connect(komenda_, SIGNAL(returnPressed()),this, SLOT(wyslijRozkaz()));
 }
 
 void TrybManualny::setMoc(uint32_t moc)
@@ -192,7 +219,7 @@ void TrybManualny::zrestartujUrzadenie(void)
 	rodzic_->zrestartujUrzadenie(true);
 }
 
-void TrybManualny::ustawTemperature(bool ask)
+void TrybManualny::ustawTemperature(const bool ask)
 {
 	rodzic_->ustawTemperature(ask);
 }
@@ -200,6 +227,11 @@ void TrybManualny::ustawTemperature(bool ask)
 void TrybManualny::zatrzymajGrzanie(void)
 {
 	rodzic_->zatrzymajGrzanie(true);
+}
+
+void TrybManualny::wyslijRozkaz(const bool ask)
+{
+	rodzic_->wyslijRozkaz(komenda_->text().toLocal8Bit().data(), ask);
 }
 
 void TrybManualny::wybierzPlik(void)
@@ -232,7 +264,7 @@ int TrybManualny::wskazPlik(void)
     return OK;
 }
 
-void TrybManualny::zapisujDoPliku(bool stan)
+void TrybManualny::zapisujDoPliku(const bool stan)
 {
 	zapisujDoPliku_=stan;
 }
