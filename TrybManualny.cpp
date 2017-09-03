@@ -206,7 +206,7 @@ void TrybManualny::wybierzPlik(void)
 
 int TrybManualny::wskazPlik(void)
 {
-	QString nazwaPlikuTmp = QFileDialog::getOpenFileName(this,tr("Wybierz plik do zapisu"), "",tr("Dane rozdzielone przecinkami (*.csv);;Wszystkie pliki (*)"));
+	QString nazwaPlikuTmp = QFileDialog::getSaveFileName(this,tr("Wybierz plik do zapisu"), "",tr("Dane rozdzielone przecinkami (*.csv);;Wszystkie pliki (*)"));
     
     if (nazwaPlikuTmp.isEmpty())
     {
