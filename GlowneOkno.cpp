@@ -14,6 +14,7 @@
 //Standardowe nagłówki C/C++
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 //Nagłówki z katalogu programu
 #include "GlowneOkno.hpp"
@@ -41,7 +42,7 @@ const char* bledy[14]=
 
 GlowneOkno::GlowneOkno(QWidget* parent):QMainWindow(parent)
 {
-	konsola_=true;
+	konsola_=false;
 	
 	setupRS();
 	setupCzasTemperatura();
@@ -155,7 +156,7 @@ void GlowneOkno::setupRS(void)
 	rs232_->setBaudRate (QSerialPort::Baud57600);
 	rs232_->setDataBits (QSerialPort::Data8);
 	rs232_->setStopBits (QSerialPort::OneStop);
-	rs232_->setParity (QSerialPort::NoParity);
+	rs232_->setParity (QSerialPort::EvenParity);
 	rs232_->setFlowControl (QSerialPort::NoFlowControl);
 	rs232_->clear();
     std::cerr<<rs232_->error()<<std::endl;
@@ -219,6 +220,7 @@ void GlowneOkno::setupWykresDlugookresowy(void)
 bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 {
 	QSerialPort::SerialPortError error;
+
 	bool stan=true;
 	do
 	{
@@ -236,7 +238,9 @@ bool GlowneOkno::wyslijRozkaz(const char* rozkaz, const bool ask)
 	
 	if(error==QSerialPort::NoError)
 	{
+		rs232_->flush();
 		rs232_->write(rozkaz);
+		
 		if(konsola_)
 			std::cout<<rozkaz<<std::endl;
 		return OK;
